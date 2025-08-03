@@ -1,20 +1,6 @@
-# OpenAI-Powered MCP Client with Privacy-First Data Redaction
+# Introduction
 
-A sophisticated Model Context Protocol (MCP) client that provides an **OpenAI LLM-powered chat interface** with **privacy-first data redaction**. This client enables natural language queries to backend services while ensuring **sensitive data never reaches external LLMs** through advanced redaction and reconstruction mechanisms.
-
-## 📋 Overview
-
-This **OpenAI LLM-powered MCP client** is a **privacy-first intelligent chat interface** that bridges users and backend services through natural language interaction with comprehensive data protection. The client leverages **OpenAI's GPT models** for query understanding and response formatting while ensuring **sensitive data never reaches external LLMs** through advanced redaction mechanisms.
-
-The system:
-
-1. **Starts and manages** MCP server lifecycle automatically
-2. **Provides secure chat CLI interface** for natural language queries
-3. **Redacts sensitive data** (emails, IPs, etc.) before sending to OpenAI LLM
-4. **Connects to OpenAI GPT models** for query understanding and response generation
-5. **Executes MCP tools** based on interpreted user intent with original data
-6. **Reconstructs original data** in final responses to users
-7. **Returns structured, human-readable responses** with complete information
+A sophisticated Model Context Protocol (MCP) client that provides an **chat interface** with **privacy-first data redaction**. This client enables natural language queries to LLM and MCP server while ensuring **sensitive data never reaches external OPENAI LLMs** through redaction and reconstruction mechanisms.
 
 ### 🔐 Privacy-First Architecture
 
@@ -83,11 +69,11 @@ mcp-client/
 └── README.md          # This file
 ```
 
-## 🔧 Configuration
+## 🔧 Modules
 
 ### MCP Client (`mcp_client.py`)
 
-The client acts as an **intelligent chat interface** that:
+The client acts as an **intelligent Agentic AI chat interface** that:
 - **Starts the MCP server** automatically when launched
 - **Connects to OpenAI LLM** for natural language understanding
 - **Provides interactive CLI chat** for user queries
@@ -106,7 +92,7 @@ The server component that:
 ## Sample Output
 
 ```bash
-(mcp-dev) satish@Satishs-Air ai-mcp % python mcp_client.py /Users/satish/work/Learning/ai-mcp/mcp_server.py
+(ai-mcp) satish@Satishs-Air ai-mcp % python mcp_client.py /Users/satish/work/Learning/ai-mcp/mcp_server.py
 
 
 ╭─ FastMCP 2.0 ──────────────────────────────────────────────────────────────╮
@@ -138,7 +124,7 @@ Connected to server with tools: ['get_tickets_assigned_to_user']
 MCP Client Started!
 Type your queries or 'quit' to exit.
 
-Query: please give jira projects assigned to me satish.k@test.com and give in tabular format the jira projects
+<b>Query</b>: please give jira projects assigned to me satish.k@test.com and give in tabular format the jira projects
 
 
 
