@@ -1,15 +1,15 @@
 # Introduction
 
-A sophisticated Model Context Protocol (MCP) client that provides an **chat interface** with **privacy-first data redaction**. This client enables natural language queries to LLM and MCP server while ensuring **sensitive data never reaches external OPENAI LLMs** through redaction and reconstruction mechanisms.
+A sophisticated Model Context Protocol (MCP) client that provides an **command line basedchat interface** with **privacy-first data redaction**. This client enables natural language queries to LLM and MCP server while ensuring **sensitive data never reaches external OPENAI LLMs** through redaction and reconstruction mechanisms.
 
 ### 🔐 Privacy-First Architecture
 
 This client implements a **sophisticated data redaction and reconstruction flow** to ensure sensitive information never leaves your environment:
 
 ```
-User Query → Data Redaction → OpenAI LLM → Tool Selection → 
-Argument Reconstruction → MCP Server → Response Redaction → 
-OpenAI Formatting → Data Reconstruction → User Response
+User Query → User Query Redaction → Invoke OpenAI LLM → Check MCP Tool Selection from OpenAI LLM response → 
+Argument Reconstruction for tool → Invoke selected tool(MCP Server) → Tool(MCP Server) Response -> Tool(MCP Server) Response Redaction → 
+Invoke OpenAI LLM → LLM response Reconstruction for user → Send User Response
 ```
 
 ### 🔄 Complete Processing Flow
@@ -49,7 +49,9 @@ pip install -r requirements.txt
 
 ### Pre-requisite
 Create a .env file at the root of project with below line and configure your OPEN_API_KEY  
+```
 OPENAI_API_KEY=<<OPENAI_API_KEY>>
+```
 
 ### Run AI Agent/MCP Client 
 
