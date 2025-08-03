@@ -124,7 +124,7 @@ Connected to server with tools: ['get_tickets_assigned_to_user']
 MCP Client Started!
 Type your queries or 'quit' to exit.
 
-<b>Query</b>: please give jira projects assigned to me satish.k@test.com and give in tabular format the jira projects
+**Query**: please give jira projects assigned to me satish.k@test.com and give in tabular format the jira projects
 
 
 
