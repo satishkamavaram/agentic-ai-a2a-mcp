@@ -48,7 +48,7 @@ pip install -r requirements.txt
 ```
 
 ### Pre-requisite
-Create a .env file at the root of project with below line and configure your OPEN_API_KEY  
+In .env file at the root of project configure your OPEN_API_KEY  
 ```
 OPENAI_API_KEY=<<OPENAI_API_KEY>>
 ```
