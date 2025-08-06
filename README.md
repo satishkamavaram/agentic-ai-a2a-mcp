@@ -59,8 +59,8 @@ When a user enters a query like *"Give me jira projects assigned to john@company
 cd $HOME$/ai-mcp
 
 # install with pip
-python3 -m venv myenv
-source myenv/bin/activate
+python3 -m venv ai-mcp
+source ai-mcp/bin/activate
 pip install -r requirements.txt
 
 ```
@@ -82,11 +82,12 @@ python mcp_client.py $HOME/ai-mcp/mcp_server.py
 ## 📁 Project Structure
 
 ```
-mcp-client/
-├── mcp_client.py      # Main MCP client implementation
-├── mcp_server.py      # MCP server implementation with dummy jira projects
-├── requirements.txt   # python dependencies
-└── README.md          # This file
+ai-mcp/
+├── mcp_client.py      # Main MCP client implementation with privacy-first redaction
+├── mcp_server.py      # MCP server implementation with dummy jira tools
+├── requirements.txt   # Python dependencies
+├── .env              # Environment variables (OpenAI API key)
+└── README.md         # Project documentation
 ```
 
 ## 🔧 Modules
