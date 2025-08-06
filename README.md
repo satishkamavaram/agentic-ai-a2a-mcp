@@ -56,7 +56,7 @@ When a user enters a query like *"Give me jira projects assigned to john@company
 
 ```bash
 # Clone or navigate to the project directory
-cd $HOME$/ai-mcp
+cd $HOME/ai-mcp
 
 # install with pip
 python3 -m venv ai-mcp
