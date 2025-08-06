@@ -1,7 +1,13 @@
 from fastmcp import FastMCP
-
+import os
+import logging
 mcp = FastMCP("jira MCP Server")
+logging.basicConfig(level=logging.INFO)
+api_key = os.getenv("API_KEY")
+config_path = os.getenv("CONFIG_PATH")
 
+logging.info(f"Server received API_KEY: {api_key}")
+logging.info(f"Server received config path: {config_path}")
 
 @mcp.tool()
 def get_tickets_assigned_to_user(user_email: str) -> list:

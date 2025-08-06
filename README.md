@@ -1,3 +1,21 @@
+> **⚠️ POC DISCLAIMER: This is a Proof of Concept (POC) implementation. Please do not evaluate this code for production-level code structure, modularity, or best practices. This project is designed for educational and demonstration purposes only.**
+
+## 📚 Table of Contents
+
+- [Introduction](#introduction)
+- [🔐 Privacy-First Architecture](#-privacy-first-architecture)
+- [🔄 Complete Processing Flow](#-complete-processing-flow)
+- [🚀 Quick Start](#-quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Set up OpenAI Key](#set-up-openai-key)
+  - [Run AI Agent/MCP Client](#run-ai-agentmcp-client)
+- [📁 Project Structure](#-project-structure)
+- [🔧 Modules](#-modules)
+  - [MCP Client (`mcp_client.py`)](#mcp-client-mcp_clientpy)
+  - [MCP Server (`mcp_server.py`)](#mcp-server-mcp_serverpy)
+- [Sample Output](#sample-output)
+
 # Introduction
 
 A sophisticated Model Context Protocol (MCP) client that provides an **command line basedchat interface** with **privacy-first data redaction**. This client enables natural language queries to LLM and MCP server while ensuring **sensitive data never reaches external OPENAI LLMs** through redaction and reconstruction mechanisms.
@@ -47,7 +65,7 @@ pip install -r requirements.txt
 
 ```
 
-### Pre-requisite
+### Set up OpenAI Key
 In .env file at the root of project configure your OPEN_API_KEY  
 ```
 OPENAI_API_KEY=<<OPENAI_API_KEY>>

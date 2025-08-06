@@ -96,11 +96,16 @@ class MCPClient:
         if not (is_python or is_js):
             raise ValueError("Server script must be a .py or .js file")
 
+        env_vars = {
+            "API_KEY": "your_api_key_1234",
+            "CONFIG_PATH": "/path/to/config",
+        }
+        
         command = "python" if is_python else "node"
         server_params = StdioServerParameters(
             command=command,
             args=[server_script_path],
-            env=None
+            env=env_vars
         )
 
         stdio_transport = await self.exit_stack.enter_async_context(stdio_client(server_params))
