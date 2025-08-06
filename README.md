@@ -18,7 +18,8 @@
 
 # Introduction
 
-A sophisticated Model Context Protocol (MCP) client that provides an **command line basedchat interface** with **privacy-first data redaction**. This client enables natural language queries to LLM and MCP server while ensuring **sensitive data never reaches external OPENAI LLMs** through redaction and reconstruction mechanisms.
+A sophisticated Model Context Protocol (MCP) client that provides a **command line based chat interface** with **privacy-first data redaction**. This client enables natural language queries to OpenAI LLM, which then selects and calls appropriate MCP server tools, while ensuring **sensitive data never reaches external OpenAI LLMs** through redaction and reconstruction mechanisms.
+
 
 ### 🔐 Privacy-First Architecture
 
