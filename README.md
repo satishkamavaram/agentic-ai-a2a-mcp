@@ -84,7 +84,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 Run the MCP client which automatically starts mcp server. 
 
 ```bash
-python mcp_client.py $HOME/ai-mcp/mcp_server.py
+python mcp_client.py ./mcp_server.py
 ```
 
 ## 📁 Project Structure
