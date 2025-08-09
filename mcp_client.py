@@ -3,6 +3,7 @@ from typing import Optional,Any, Dict, List, Union
 from contextlib import AsyncExitStack
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
 from dotenv import load_dotenv
 import re
 import os
@@ -135,7 +136,7 @@ class MCPClient:
                 "content": query
             }
         ]
-
+        final_text = []
         response = await self.session.list_tools()
         available_tools = [{
             "type": "function", 
@@ -145,29 +146,39 @@ class MCPClient:
                 "parameters": tool.inputSchema
             }
         } for tool in response.tools]
+
+        
         print(f"\033[1m**sending user query to openapi llm to find if any mcp tool to use:**\033[0m {messages}\n\n")
-        # Initial OpenAI API call
-        response = await client.chat.completions.create(
-            model="gpt-4-turbo",  # or any other OpenAI model
-            max_tokens=1000,
-            messages=messages,
-            tools=available_tools
-        )
-        print(f"\033[1m**openai llm response:**\033[0m {response} \n\n")
-        # Process response and handle tool calls
-        final_text = []
+        response = await self.invoke_llm(client, available_tools, messages)
         assistant_message = response.choices[0].message
-        assistant_message_content = assistant_message.content or ""
         
-        if assistant_message_content:
-            final_text.append(assistant_message_content)
-        
-        tool_calls = assistant_message.tool_calls
-        print(f"\033[1m**Calling mcp tool:**\033[0m {tool_calls} \n\n")
+        while assistant_message.tool_calls:
+            tool_calls = assistant_message.tool_calls
+            await self.invoke_tool(tool_calls, messages, final_text)
+            print(f"\033[1m**sending tools response to openapi llm:**\033[0m {messages}\n\n")
+            response = await self.invoke_llm(client, available_tools, messages)
+            print(f"\033[1m**openai llm response:**\033[0m {response}\n\n")
+            assistant_message = response.choices[0].message
+
+        response_content = reconstruct_emails_in_content(response.choices[0].message.content)
+        final_text.append(response_content)
+
+        return "\n".join(final_text)
+
+    async def invoke_llm(self,  client: AsyncOpenAI,available_tools: list,messages: list) -> str:
+         return await client.chat.completions.create(
+                    model="gpt-4-turbo",
+                    max_tokens=1000,
+                    messages=messages,
+                    tools=available_tools
+                )
+    
+    async def invoke_tool(self, tool_calls: Optional[List[ChatCompletionMessageToolCall]] ,messages: list,final_text:list) -> None:
         if tool_calls:
+            print(f"\033[1m**Going to call these mcp tool:**\033[0m {tool_calls} \n\n")
             messages.append({
                     "role": "assistant",
-                    "content": assistant_message_content,
+                    "content": '',
                     "tool_calls": tool_calls
             })
             for tool_call in tool_calls:
@@ -191,21 +202,7 @@ class MCPClient:
                     "content": result.content,
                     "tool_call_id": tool_call.id
                 })
-        print(f"\033[1m**sending tools response to openapi llm:**\033[0m {messages}\n\n")
-        # Get next response from OpenAI
-        response = await client.chat.completions.create(
-                    model="gpt-4-turbo",
-                    max_tokens=1000,
-                    messages=messages,
-                    tools=available_tools
-                )
-        print(f"\033[1m**openai llm response:**\033[0m {response}\n\n")
-        response_content = reconstruct_emails_in_content(response.choices[0].message.content)
-        final_text.append(response_content)
 
-        return "\n".join(final_text)
-
-    
     async def chat_loop(self):
         """Run an interactive chat loop"""
         print("\nMCP Client Started!")
@@ -219,7 +216,7 @@ class MCPClient:
                     break
 
                 response = await self.process_query(query)
-                print("\n" + response)
+                print("\033[1m**Final Response:**\033[0m \n" + response)
 
             except Exception as e:
                 print(f"\nError: {str(e)}")

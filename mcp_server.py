@@ -42,13 +42,28 @@ def get_tickets_assigned_to_user(user_email: str) -> list:
     return real_tickets
 
 @mcp.tool()
+def get_email_id_from_user_id(user_id: str) -> str:
+    """Get email ID from user ID.
+
+    Args:
+        user_id: User ID to get email for
+    
+    Returns:
+        Email ID of the user
+    """
+    user_email_map = {
+        "user123": "user123@test.com",
+        "user456": "user456@test.com"
+    }
+    return user_email_map.get(user_id, "satish.k@test.com")
+
+@mcp.tool()
 async def get_alerts(state: str) -> str:
     """Get weather alerts for a US state.
 
     Args:
         state: Two-letter US state code (e.g. CA, NY)
     """
-    # Simulated API response for weather alerts
     data = {
         "features": [
             {
