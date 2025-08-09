@@ -18,7 +18,7 @@
 
 # Introduction
 
-A sophisticated Model Context Protocol (MCP) client that provides a **command line based chat interface** with **privacy-first data redaction**. This client enables natural language queries to OpenAI LLM, which then selects and calls appropriate MCP server tools, while ensuring **sensitive data never reaches external OpenAI LLMs** through redaction and reconstruction mechanisms.
+A sophisticated Model Context Protocol (MCP) client that provides a **command line based chat interface** with **privacy-first data redaction**. This client enables natural language queries to OpenAI LLM, which intelligently selects and orchestrates **multiple MCP server tool calls** as needed, while ensuring **sensitive data never reaches external OpenAI LLMs** through redaction and reconstruction mechanisms.
 
 
 ### 🔐 Privacy-First Architecture
@@ -146,56 +146,77 @@ Connected to server with tools: ['get_tickets_assigned_to_user']
 MCP Client Started!
 Type your queries or 'quit' to exit.
 
-**Query**: please give jira projects assigned to me satish.k@test.com and give in tabular format
+**Query:** weather report for BA state and  jira tickets assigned to satish.k@test.com in tabular format include asssigne for each ticket
 
 
 
-**user query**: please give jira projects assigned to me satish.k@test.com and give in tabular format the jira projects
+**user query:** weather report for BA state and  jira tickets assigned to satish.k@test.com in tabular format include asssigne for each ticket
 
 
-**user query redacted**: please give jira projects assigned to me EAMIL_54b2079f and give in tabular format the jira projects
+**user query redacted:** weather report for BA state and  jira tickets assigned to EAMIL_54b2079f in tabular format include asssigne for each ticket
 
 
-**sending user query to openapi llm to find if any mcp tool to use**: [{'role': 'user', 'content': 'please give jira projects assigned to me EAMIL_54b2079f and give in tabular format the jira projects'}]
+INFO:mcp.server.lowlevel.server:Processing request of type ListToolsRequest
+**sending user query to openapi llm to find if any mcp tool to use:** [{'role': 'user', 'content': 'weather report for BA state and  jira tickets assigned to EAMIL_54b2079f in tabular format include asssigne for each ticket'}]
 
 
-**openai llm response**: ChatCompletion(id='chatcmpl-C0Wbvqm1LZGkLf2uhGPKuH25I1FI1', choices=[Choice(finish_reason='tool_calls', index=0, logprobs=None, message=ChatCompletionMessage(content=None, refusal=None, role='assistant', annotations=[], audio=None, function_call=None, tool_calls=[ChatCompletionMessageToolCall(id='call_vLhOXlI8kIayybUaCJMw2azZ', function=Function(arguments='{"user_email":"EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')]))], created=1754241391, model='gpt-4-turbo-2024-04-09', object='chat.completion', service_tier='default', system_fingerprint='fp_de235176ee', usage=CompletionUsage(completion_tokens=25, prompt_tokens=126, total_tokens=151, completion_tokens_details=CompletionTokensDetails(accepted_prediction_tokens=0, audio_tokens=0, reasoning_tokens=0, rejected_prediction_tokens=0), prompt_tokens_details=PromptTokensDetails(audio_tokens=0, cached_tokens=0))) 
+**openai llm response:** ChatCompletion(id='chatcmpl-C2aEW97WcYS6D6kU4hQj5ltzcxfU1', choices=[Choice(finish_reason='tool_calls', index=0, logprobs=None, message=ChatCompletionMessage(content=None, refusal=None, role='assistant', annotations=[], audio=None, function_call=None, tool_calls=[ChatCompletionMessageToolCall(id='call_B3mLJXH6xJYWIN84hMT4lw7W', function=Function(arguments='{"state": "BA"}', name='get_alerts'), type='function'), ChatCompletionMessageToolCall(id='call_73bQ6AeJBYHHC0b1iBoxGt5N', function=Function(arguments='{"user_email": "EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')]))], created=1754731972, model='gpt-4-turbo-2024-04-09', object='chat.completion', service_tier='default', system_fingerprint='fp_de235176ee', usage=CompletionUsage(completion_tokens=55, prompt_tokens=179, total_tokens=234, completion_tokens_details=CompletionTokensDetails(accepted_prediction_tokens=0, audio_tokens=0, reasoning_tokens=0, rejected_prediction_tokens=0), prompt_tokens_details=PromptTokensDetails(audio_tokens=0, cached_tokens=0))) 
 
 
-**Calling mcp tool**: [ChatCompletionMessageToolCall(id='call_vLhOXlI8kIayybUaCJMw2azZ', function=Function(arguments='{"user_email":"EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')] 
+**Calling mcp tool:** [ChatCompletionMessageToolCall(id='call_B3mLJXH6xJYWIN84hMT4lw7W', function=Function(arguments='{"state": "BA"}', name='get_alerts'), type='function'), ChatCompletionMessageToolCall(id='call_73bQ6AeJBYHHC0b1iBoxGt5N', function=Function(arguments='{"user_email": "EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')] 
 
 
-**Processing tool call**: ChatCompletionMessageToolCall(id='call_vLhOXlI8kIayybUaCJMw2azZ', function=Function(arguments='{"user_email":"EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')
+**Processing tool call:** ChatCompletionMessageToolCall(id='call_B3mLJXH6xJYWIN84hMT4lw7W', function=Function(arguments='{"state": "BA"}', name='get_alerts'), type='function')
 
 
-**redacted input args**: {'user_email': 'EAMIL_54b2079f'}
+**redacted input args:** {'state': 'BA'}
 
 
-**reconstructed input args for sendint to mcp tool**: {'user_email': 'satish.k@test.com'}
+**reconstructed input args for sendint to mcp tool:** {'state': 'BA'}
 
 
-**mcp tool response**: meta=None content=[TextContent(type='text', text='[{"ticket_id":"PROJ-2024-001","summary":"Fix authentication vulnerability in user login system","description":"Critical security issue affecting user accounts","assignee":"satish.k@test.com","priority":"HIGH","status":"IN_PROGRESS"},{"ticket_id":"PROJ-2024-002","summary":"Update customer database schema for GDPR compliance","description":"Database contains PII that needs protection","assignee":"satish.k@test.com","priority":"MEDIUM","status":"OPEN"}]', annotations=None, meta=None)] structuredContent={'result': [{'ticket_id': 'PROJ-2024-001', 'summary': 'Fix authentication vulnerability in user login system', 'description': 'Critical security issue affecting user accounts', 'assignee': 'satish.k@test.com', 'priority': 'HIGH', 'status': 'IN_PROGRESS'}, {'ticket_id': 'PROJ-2024-002', 'summary': 'Update customer database schema for GDPR compliance', 'description': 'Database contains PII that needs protection', 'assignee': 'satish.k@test.com', 'priority': 'MEDIUM', 'status': 'OPEN'}]} isError=False
+INFO:mcp.server.lowlevel.server:Processing request of type CallToolRequest
+**mcp tool response:** meta=None content=[TextContent(type='text', text='\nHeadline: Severe Thunderstorm Warning\nDescription: A severe thunderstorm is approaching your area. Take cover immediately.\nSeverity: Severe\n', annotations=None, meta=None)] structuredContent={'result': '\nHeadline: Severe Thunderstorm Warning\nDescription: A severe thunderstorm is approaching your area. Take cover immediately.\nSeverity: Severe\n'} isError=False
 
 
-**mcp tool response redacted**: meta=None content=[TextContent(type='text', text='[{"ticket_id":"PROJ-2024-001","summary":"Fix authentication vulnerability in user login system","description":"Critical security issue affecting user accounts","assignee":"EAMIL_54b2079f","priority":"HIGH","status":"IN_PROGRESS"},{"ticket_id":"PROJ-2024-002","summary":"Update customer database schema for GDPR compliance","description":"Database contains PII that needs protection","assignee":"EAMIL_54b2079f","priority":"MEDIUM","status":"OPEN"}]', annotations=None, meta=None, meta=None)] structuredContent={'result': [{'ticket_id': 'PROJ-2024-001', 'summary': 'Fix authentication vulnerability in user login system', 'description': 'Critical security issue affecting user accounts', 'assignee': 'satish.k@test.com', 'priority': 'HIGH', 'status': 'IN_PROGRESS'}, {'ticket_id': 'PROJ-2024-002', 'summary': 'Update customer database schema for GDPR compliance', 'description': 'Database contains PII that needs protection', 'assignee': 'satish.k@test.com', 'priority': 'MEDIUM', 'status': 'OPEN'}]} isError=False
+**mcp tool response redacted:** meta=None content=[TextContent(type='text', text='\nHeadline: Severe Thunderstorm Warning\nDescription: A severe thunderstorm is approaching your area. Take cover immediately.\nSeverity: Severe\n', annotations=None, meta=None, meta=None)] structuredContent={'result': '\nHeadline: Severe Thunderstorm Warning\nDescription: A severe thunderstorm is approaching your area. Take cover immediately.\nSeverity: Severe\n'} isError=False
 
 
-**sending tool response to openapi llm** [{'role': 'user', 'content': 'please give jira projects assigned to me EAMIL_54b2079f and give in tabular format the jira projects'}, {'role': 'assistant', 'content': '', 'tool_calls': [ChatCompletionMessageToolCall(id='call_vLhOXlI8kIayybUaCJMw2azZ', function=Function(arguments='{"user_email":"EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')]}, {'role': 'tool', 'name': 'get_tickets_assigned_to_user', 'content': [TextContent(type='text', text='[{"ticket_id":"PROJ-2024-001","summary":"Fix authentication vulnerability in user login system","description":"Critical security issue affecting user accounts","assignee":"EAMIL_54b2079f","priority":"HIGH","status":"IN_PROGRESS"},{"ticket_id":"PROJ-2024-002","summary":"Update customer database schema for GDPR compliance","description":"Database contains PII that needs protection","assignee":"EAMIL_54b2079f","priority":"MEDIUM","status":"OPEN"}]', annotations=None, meta=None, meta=None)], 'tool_call_id': 'call_vLhOXlI8kIayybUaCJMw2azZ'}]
+**Processing tool call:** ChatCompletionMessageToolCall(id='call_73bQ6AeJBYHHC0b1iBoxGt5N', function=Function(arguments='{"user_email": "EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')
 
 
-**openai llm response**: ChatCompletion(id='chatcmpl-C0WbwcGJhiYnVoNk5FEcVAByl2t06', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='Here are the Jira projects assigned to the user email "EAMIL_54b2079f" in a tabular format:\n\n| Ticket ID       | Summary                                         | Description                             | Assignee        | Priority | Status       |\n|-----------------|-------------------------------------------------|-----------------------------------------|-----------------|----------|--------------|\n| PROJ-2024-001   | Fix authentication vulnerability in user login  | Critical security issue affecting user  | EAMIL_54b2079f  | HIGH     | IN_PROGRESS  |\n|                 | system                                          | accounts                                |                 |          |              |\n| PROJ-2024-002   | Update customer database schema for GDPR        | Database contains PII that needs        | EAMIL_54b2079f  | MEDIUM   | OPEN         |\n|                 | compliance                                      | protection                              |                 |          |              |\n\nThese projects are currently assigned and tackle important issues ranging from security to GDPR compliance.', refusal=None, role='assistant', annotations=[], audio=None, function_call=None, tool_calls=None))], created=1754241392, model='gpt-4-turbo-2024-04-09', object='chat.completion', service_tier='default', system_fingerprint='fp_de235176ee', usage=CompletionUsage(completion_tokens=196, prompt_tokens=268, total_tokens=464, completion_tokens_details=CompletionTokensDetails(accepted_prediction_tokens=0, audio_tokens=0, reasoning_tokens=0, rejected_prediction_tokens=0), prompt_tokens_details=PromptTokensDetails(audio_tokens=0, cached_tokens=0)))
+**redacted input args:** {'user_email': 'EAMIL_54b2079f'}
 
 
-**Final Response to User**
+**reconstructed input args for sendint to mcp tool:** {'user_email': 'satish.k@test.com'}
+
+
+INFO:mcp.server.lowlevel.server:Processing request of type CallToolRequest
+**mcp tool response:** meta=None content=[TextContent(type='text', text='[{"ticket_id":"PROJ-2024-001","summary":"Fix authentication vulnerability in user login system","description":"Critical security issue affecting user accounts","assignee":"satish.k@test.com","priority":"HIGH","status":"IN_PROGRESS"},{"ticket_id":"PROJ-2024-002","summary":"Update customer database schema for GDPR compliance","description":"Database contains PII that needs protection","assignee":"satish.k@test.com","priority":"MEDIUM","status":"OPEN"}]', annotations=None, meta=None)] structuredContent={'result': [{'ticket_id': 'PROJ-2024-001', 'summary': 'Fix authentication vulnerability in user login system', 'description': 'Critical security issue affecting user accounts', 'assignee': 'satish.k@test.com', 'priority': 'HIGH', 'status': 'IN_PROGRESS'}, {'ticket_id': 'PROJ-2024-002', 'summary': 'Update customer database schema for GDPR compliance', 'description': 'Database contains PII that needs protection', 'assignee': 'satish.k@test.com', 'priority': 'MEDIUM', 'status': 'OPEN'}]} isError=False
+
+
+**mcp tool response redacted:** meta=None content=[TextContent(type='text', text='[{"ticket_id":"PROJ-2024-001","summary":"Fix authentication vulnerability in user login system","description":"Critical security issue affecting user accounts","assignee":"EAMIL_54b2079f","priority":"HIGH","status":"IN_PROGRESS"},{"ticket_id":"PROJ-2024-002","summary":"Update customer database schema for GDPR compliance","description":"Database contains PII that needs protection","assignee":"EAMIL_54b2079f","priority":"MEDIUM","status":"OPEN"}]', annotations=None, meta=None, meta=None)] structuredContent={'result': [{'ticket_id': 'PROJ-2024-001', 'summary': 'Fix authentication vulnerability in user login system', 'description': 'Critical security issue affecting user accounts', 'assignee': 'satish.k@test.com', 'priority': 'HIGH', 'status': 'IN_PROGRESS'}, {'ticket_id': 'PROJ-2024-002', 'summary': 'Update customer database schema for GDPR compliance', 'description': 'Database contains PII that needs protection', 'assignee': 'satish.k@test.com', 'priority': 'MEDIUM', 'status': 'OPEN'}]} isError=False
+
+
+**sending tools response to openapi llm:** [{'role': 'user', 'content': 'weather report for BA state and  jira tickets assigned to EAMIL_54b2079f in tabular format include asssigne for each ticket'}, {'role': 'assistant', 'content': '', 'tool_calls': [ChatCompletionMessageToolCall(id='call_B3mLJXH6xJYWIN84hMT4lw7W', function=Function(arguments='{"state": "BA"}', name='get_alerts'), type='function'), ChatCompletionMessageToolCall(id='call_73bQ6AeJBYHHC0b1iBoxGt5N', function=Function(arguments='{"user_email": "EAMIL_54b2079f"}', name='get_tickets_assigned_to_user'), type='function')]}, {'role': 'tool', 'name': 'get_alerts', 'content': [TextContent(type='text', text='\nHeadline: Severe Thunderstorm Warning\nDescription: A severe thunderstorm is approaching your area. Take cover immediately.\nSeverity: Severe\n', annotations=None, meta=None, meta=None)], 'tool_call_id': 'call_B3mLJXH6xJYWIN84hMT4lw7W'}, {'role': 'tool', 'name': 'get_tickets_assigned_to_user', 'content': [TextContent(type='text', text='[{"ticket_id":"PROJ-2024-001","summary":"Fix authentication vulnerability in user login system","description":"Critical security issue affecting user accounts","assignee":"EAMIL_54b2079f","priority":"HIGH","status":"IN_PROGRESS"},{"ticket_id":"PROJ-2024-002","summary":"Update customer database schema for GDPR compliance","description":"Database contains PII that needs protection","assignee":"EAMIL_54b2079f","priority":"MEDIUM","status":"OPEN"}]', annotations=None, meta=None, meta=None)], 'tool_call_id': 'call_73bQ6AeJBYHHC0b1iBoxGt5N'}]
+
+
+**openai llm response:** ChatCompletion(id='chatcmpl-C2aEYTlZXfnyVk0h0QJIOolyA9Jt8', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='### Weather Report for BA State:\n- **Alert:** Severe Thunderstorm Warning\n- **Description:** A severe thunderstorm is approaching your area. Take cover immediately.\n- **Severity:** Severe\n\n### Jira Tickets Assigned to EAMIL_54b2079f:\n| Ticket ID      | Summary                                         | Description                                      | Assignee        | Priority | Status       |\n|----------------|-------------------------------------------------|--------------------------------------------------|-----------------|----------|--------------|\n| PROJ-2024-001  | Fix authentication vulnerability in user login  | Critical security issue affecting user accounts  | EAMIL_54b2079f  | HIGH     | IN_PROGRESS  |\n| PROJ-2024-002  | Update customer database schema for GDPR compliance | Database contains PII that needs protection      | EAMIL_54b2079f  | MEDIUM   | OPEN         |\n\nPlease take the necessary precautions for the approaching severe weather.', refusal=None, role='assistant', annotations=[], audio=None, function_call=None, tool_calls=None))], created=1754731974, model='gpt-4-turbo-2024-04-09', object='chat.completion', service_tier='default', system_fingerprint='fp_de235176ee', usage=CompletionUsage(completion_tokens=191, prompt_tokens=406, total_tokens=597, completion_tokens_details=CompletionTokensDetails(accepted_prediction_tokens=0, audio_tokens=0, reasoning_tokens=0, rejected_prediction_tokens=0), prompt_tokens_details=PromptTokensDetails(audio_tokens=0, cached_tokens=0)))
+
+
+
+[Calling tool get_alerts with args {'state': 'BA'}]
 [Calling tool get_tickets_assigned_to_user with args {'user_email': 'satish.k@test.com'}]
-Here are the Jira projects assigned to the user email "satish.k@test.com" in a tabular format:
+### Weather Report for BA State:
+- **Alert:** Severe Thunderstorm Warning
+- **Description:** A severe thunderstorm is approaching your area. Take cover immediately.
+- **Severity:** Severe
 
-| Ticket ID       | Summary                                         | Description                             | Assignee        | Priority | Status       |
-|-----------------|-------------------------------------------------|-----------------------------------------|-----------------|----------|--------------|
-| PROJ-2024-001   | Fix authentication vulnerability in user login  | Critical security issue affecting user  | satish.k@test.com  | HIGH     | IN_PROGRESS  |
-|                 | system                                          | accounts                                |                 |          |              |
-| PROJ-2024-002   | Update customer database schema for GDPR        | Database contains PII that needs        | satish.k@test.com  | MEDIUM   | OPEN         |
-|                 | compliance                                      | protection                              |                 |          |              |
+### Jira Tickets Assigned to satish.k@test.com:
+| Ticket ID      | Summary                                         | Description                                      | Assignee        | Priority | Status       |
+|----------------|-------------------------------------------------|--------------------------------------------------|-----------------|----------|--------------|
+| PROJ-2024-001  | Fix authentication vulnerability in user login  | Critical security issue affecting user accounts  | satish.k@test.com  | HIGH     | IN_PROGRESS  |
+| PROJ-2024-002  | Update customer database schema for GDPR compliance | Database contains PII that needs protection      | satish.k@test.com  | MEDIUM   | OPEN         |
 
-These projects are currently assigned and tackle important issues ranging from security to GDPR compliance.
+Please take the necessary precautions for the approaching severe weather.
 ```

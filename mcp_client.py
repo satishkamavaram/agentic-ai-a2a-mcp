@@ -126,9 +126,9 @@ class MCPClient:
         # Initialize OpenAI client with your API key
         client = AsyncOpenAI(api_key=api_key)
         print("\n\n")
-        print(f"user query: {query}\n\n")
+        print(f"\033[1m**user query:**\033[0m {query}\n\n")
         query = redact_emails_in_text(query)
-        print(f"user query redacted: {query}\n\n")
+        print(f"\033[1m**user query redacted:**\033[0m {query}\n\n")
         messages = [
             {
                 "role": "user",
@@ -145,7 +145,7 @@ class MCPClient:
                 "parameters": tool.inputSchema
             }
         } for tool in response.tools]
-        print(f"sending user query to openapi llm to find if any mcp tool to use: {messages}\n\n")
+        print(f"\033[1m**sending user query to openapi llm to find if any mcp tool to use:**\033[0m {messages}\n\n")
         # Initial OpenAI API call
         response = await client.chat.completions.create(
             model="gpt-4-turbo",  # or any other OpenAI model
@@ -153,7 +153,7 @@ class MCPClient:
             messages=messages,
             tools=available_tools
         )
-        print(f"openai llm response: {response} \n\n")
+        print(f"\033[1m**openai llm response:**\033[0m {response} \n\n")
         # Process response and handle tool calls
         final_text = []
         assistant_message = response.choices[0].message
@@ -163,44 +163,45 @@ class MCPClient:
             final_text.append(assistant_message_content)
         
         tool_calls = assistant_message.tool_calls
-        print(f"Calling mcp tool: {tool_calls} \n\n")
+        print(f"\033[1m**Calling mcp tool:**\033[0m {tool_calls} \n\n")
         if tool_calls:
-            for tool_call in tool_calls:
-                print(f"Processing tool call: {tool_call}\n\n")
-                tool_name = tool_call.function.name
-                tool_args = json.loads(tool_call.function.arguments)
-                print(f"redacted input args: {tool_args}\n\n")
-                tool_args = reconstruct_emails_in_content(tool_args)
-                print(f"reconstructed input args for sendint to mcp tool: {tool_args}\n\n")
-                # Execute tool call
-                result = await self.session.call_tool(tool_name, tool_args)
-                final_text.append(f"[Calling tool {tool_name} with args {tool_args}]")
-                print(f"mcp tool response: {result}\n\n")
-                #result.content = redact_emails(result.content)  # Redact emails in the tool response
-                result.content = [redact_emails_in_content(item) for item in result.content]
-                print(f"mcp tool response redacted: {result}\n\n")
-                messages.append({
+            messages.append({
                     "role": "assistant",
                     "content": assistant_message_content,
                     "tool_calls": tool_calls
-                })
+            })
+            for tool_call in tool_calls:
+                print(f"\033[1m**Processing tool call:**\033[0m {tool_call}\n\n")
+                tool_name = tool_call.function.name
+                tool_args = json.loads(tool_call.function.arguments)
+                print(f"\033[1m**redacted input args:**\033[0m {tool_args}\n\n")
+                tool_args = reconstruct_emails_in_content(tool_args)
+                print(f"\033[1m**reconstructed input args for sendint to mcp tool:**\033[0m {tool_args}\n\n")
+                # Execute tool call
+                result = await self.session.call_tool(tool_name, tool_args)
+                final_text.append(f"[Calling tool {tool_name} with args {tool_args}]")
+                print(f"\033[1m**mcp tool response:**\033[0m {result}\n\n")
+                #result.content = redact_emails(result.content)  # Redact emails in the tool response
+                result.content = [redact_emails_in_content(item) for item in result.content]
+                print(f"\033[1m**mcp tool response redacted:**\033[0m {result}\n\n")
+                
                 messages.append({
                     "role": "tool",
                     "name": tool_name,
                     "content": result.content,
                     "tool_call_id": tool_call.id
                 })
-                print(f"sending tool response to openapi llm: {messages}\n\n")
-                # Get next response from OpenAI
-                response = await client.chat.completions.create(
+        print(f"\033[1m**sending tools response to openapi llm:**\033[0m {messages}\n\n")
+        # Get next response from OpenAI
+        response = await client.chat.completions.create(
                     model="gpt-4-turbo",
                     max_tokens=1000,
                     messages=messages,
                     tools=available_tools
                 )
-                print(f"openai llm response: {response}\n\n")
-                response_content = reconstruct_emails_in_content(response.choices[0].message.content)
-                final_text.append(response_content)
+        print(f"\033[1m**openai llm response:**\033[0m {response}\n\n")
+        response_content = reconstruct_emails_in_content(response.choices[0].message.content)
+        final_text.append(response_content)
 
         return "\n".join(final_text)
 
@@ -212,7 +213,7 @@ class MCPClient:
 
         while True:
             try:
-                query = input("\nQuery: ").strip()
+                query = input("\n\033[1m**Query:**\033[0m ").strip()
 
                 if query.lower() == 'quit':
                     break

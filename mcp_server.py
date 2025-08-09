@@ -41,7 +41,44 @@ def get_tickets_assigned_to_user(user_email: str) -> list:
     
     return real_tickets
 
+@mcp.tool()
+async def get_alerts(state: str) -> str:
+    """Get weather alerts for a US state.
 
+    Args:
+        state: Two-letter US state code (e.g. CA, NY)
+    """
+    # Simulated API response for weather alerts
+    data = {
+        "features": [
+            {
+                "id": "1",
+                "type": "Alert",
+                "properties": {
+                    "headline": "Severe Thunderstorm Warning",
+                    "description": "A severe thunderstorm is approaching your area. Take cover immediately.",
+                    "severity": "Severe",
+                    "effective": "2024-10-01T14:00:00Z",
+                    "expires": "2024-10-01T15:00:00Z"
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-120.0, 37.0]
+                }
+            }
+        ]
+    }
+    alerts = [format_alert(feature) for feature in data["features"]]
+    return "\n---\n".join(alerts)
+
+def format_alert(feature: dict) -> str:
+    """Format an alert feature into a readable string."""
+    props = feature["properties"]
+    return f"""
+Headline: {props.get('headline', 'Unknown')}
+Description: {props.get('description', 'Unknown')}
+Severity: {props.get('severity', 'Unknown')}
+"""
 
 if __name__ == "__main__":
     # Run with streamable-http transport for HTTP-based communication in containers
