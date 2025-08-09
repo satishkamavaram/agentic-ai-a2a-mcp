@@ -18,7 +18,14 @@
 
 # Introduction
 
-A sophisticated Model Context Protocol (MCP) client that provides a **command line based chat interface** with **privacy-first data redaction**. This client enables natural language queries to OpenAI LLM, which intelligently selects and orchestrates **multiple MCP server tool calls** as needed, while ensuring **sensitive data never reaches external OpenAI LLMs** through redaction and reconstruction mechanisms.
+A sophisticated Model Context Protocol (MCP) client that provides a **command line based chat interface** with **privacy-first data redaction**. This client enables natural language queries to OpenAI LLM, which intelligently selects and orchestrates **multiple MCP server tool calls includes dynamic tool chaining** as needed, while ensuring **sensitive data never reaches external OpenAI LLMs** through redaction and reconstruction mechanisms.
+
+The system demonstrates **intelligent tool chaining** where the LLM dynamically identifies dependencies between tools. For example, when a user provides only a `userId`, the LLM automatically:
+1. **Recognizes the data dependency** - determines that an email address is needed for the target operation
+2. **Orchestrates tool sequence** - first calls `get_email_id_from_user_id` to resolve the userId to an email
+3. **Chains subsequent calls** - uses the retrieved email to call tools like `get_tickets_assigned_to_user`
+
+This **autonomous tool orchestration** eliminates the need for users to understand internal data relationships or tool dependencies, enabling natural language queries like *"show jira tickets for user 1234"* to be automatically expanded into the correct sequence of tool calls.
 
 
 ### 🔐 Privacy-First Architecture
