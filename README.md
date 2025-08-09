@@ -92,7 +92,7 @@ python mcp_client.py $HOME/ai-mcp/mcp_server.py
 ```
 ai-mcp/
 ├── mcp_client.py      # Main MCP client implementation with privacy-first redaction
-├── mcp_server.py      # MCP server implementation with dummy jira tools
+├── mcp_server.py      # MCP server implementation with dummy tools
 ├── requirements.txt   # Python dependencies
 ├── .env              # Environment variables (OpenAI API key)
 └── README.md         # Project documentation
@@ -102,26 +102,42 @@ ai-mcp/
 
 ### MCP Client (`mcp_client.py`)
 
-The client acts as an **intelligent Agentic AI chat interface** that:
-- **Starts the MCP server** automatically when launched
-- **Connects to OpenAI LLM** for natural language understanding
-- **Provides interactive CLI chat** for user queries
-- **Translates natural language** to MCP tool calls
-- **Formats responses** in human-readable structure
-- **Handles complex queries** like "show me jira projects for user@email.com"
+The **main application** that acts as an intelligent AI-powered chat interface:
+
+**🚀 Core Functions:**
+- **Auto-launches the MCP server** when you start the client
+- **Connects to OpenAI GPT-4** to understand your natural language questions
+- **Provides a command-line chat interface** where you type questions and get answers
+- **Translates your English questions** into specific tool calls automatically
+
+**🔒 Privacy Protection:**
+- **Automatically hides sensitive data** (only email addresses) before sending to OpenAI
+- **Reconstructs real data** in the final response you see
+- **Ensures your private information never reaches LLM**
+
+**🧠 Smart Features:**
+- **Understands complex requests** like "show tickets for user 1234"
+- **Automatically figures out** which tools to call and in what order
+- **Handles multi-step operations** seamlessly (e.g., first get email, then get tickets)
 
 ### MCP Server (`mcp_server.py`)
 
-The server component that:
-- **Exposes dummy business logic jira tool**
-- **Handles tool execution** with proper parameters
-- **Returns structured data** to the client
-- **Provides dummy/mock data** for development and testing
+The **backend service** that provides business tools and data:
+
+**🛠️ Available Tools:**
+- **`get_tickets_assigned_to_user`** - Finds JIRA tickets assigned to a specific person
+- **`get_email_id_from_user_id`** - Converts user IDs (like "1234") to email addresses
+- **`get_alerts`** - Retrieves weather alerts for US states
+
+**📊 Data & Responses:**
+- **Provides realistic mock data** for testing and demonstration
+- **Returns structured JSON data** with ticket details, priorities, and status
+- **Simulates real business systems** without needing actual JIRA or weather APIs
 
 ## Sample Output
 
 ```bash
-(ai-mcp) satish@Satishs-Air ai-mcp % python mcp_client.py /Users/satish/work/Learning/ai-mcp/mcp_server.py
+(ai-mcp) satish@Satishs-Air ai-mcp % python mcp_client.py ./mcp_server.py
 
 
 ╭─ FastMCP 2.0 ──────────────────────────────────────────────────────────────╮
