@@ -58,11 +58,11 @@ def get_email_id_from_user_id(user_id: str) -> str:
     return user_email_map.get(user_id, "satish.k@test.com")
 
 @mcp.tool()
-async def get_alerts(state: str) -> str:
-    """Get weather alerts for a US state.
+async def get_weather_alerts(state: str) -> str:
+    """Get weather alerts for a German state.
 
     Args:
-        state: Two-letter US state code (e.g. CA, NY)
+        state: Two-letter German state code (e.g. BW, BY)
     """
     data = {
         "features": [

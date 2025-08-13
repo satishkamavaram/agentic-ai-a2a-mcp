@@ -3,6 +3,7 @@
 ## 📚 Table of Contents
 
 - [Introduction](#introduction)
+- [⚠️ Limitations](#️-limitations)
 - [🔐 Privacy-First Architecture](#-privacy-first-architecture)
 - [🔄 Complete Processing Flow](#-complete-processing-flow)
 - [🚀 Quick Start](#-quick-start)
@@ -13,12 +14,15 @@
 - [📁 Project Structure](#-project-structure)
 - [🔧 Modules](#-modules)
   - [MCP Client (`mcp_client.py`)](#mcp-client-mcp_clientpy)
+  - [MCP Client UI (`mcp_client_ui.py`)](#mcp-client-ui-mcp_client_uipy)
   - [MCP Server (`mcp_server.py`)](#mcp-server-mcp_serverpy)
-- [Sample Output](#sample-output)
+- [Sample Output UI](#sample-output-ui)
+- [Sample Output CLI](#sample-output-cli)
+
 
 # Introduction
 
-A sophisticated Model Context Protocol (MCP) client that provides a **command line based chat interface** with **privacy-first data redaction**. This client enables natural language queries to OpenAI LLM, which intelligently selects and orchestrates **multiple MCP server tool calls includes dynamic tool chaining** as needed, while ensuring **sensitive data never reaches external OpenAI LLMs** through redaction and reconstruction mechanisms.
+A sophisticated Model Context Protocol (MCP) client that provides a **ui and command line based chat interface** with **privacy-first data redaction**. This client enables natural language queries to OpenAI LLM, which intelligently selects and orchestrates **multiple MCP server tool calls includes dynamic tool chaining** as needed, while ensuring **sensitive data never reaches external OpenAI LLMs** through redaction and reconstruction mechanisms.
 
 The system demonstrates **intelligent tool chaining** where the LLM dynamically identifies dependencies between tools. For example, when a user provides only a `userId`, the LLM automatically:
 1. **Recognizes the data dependency** - determines that an email address is needed for the target operation
@@ -27,8 +31,16 @@ The system demonstrates **intelligent tool chaining** where the LLM dynamically 
 
 This **autonomous tool orchestration** eliminates the need for users to understand internal data relationships or tool dependencies, enabling natural language queries like *"show jira tickets for user 1234"* to be automatically expanded into the correct sequence of tool calls.
 
+## ⚠️ Limitations
 
-### 🔐 Privacy-First Architecture
+This is a **Proof of Concept (POC)** implementation with several intentional limitations:
+
+1. 🔗 Single Server Connection - Can only connect to one MCP server at a time
+2. 📡 Transport Restriction - Only supports stdio transport (no HTTP Streaming)
+3. 🔒 Limited Privacy Protection - Only redacts email addresses (not other sensitive data)
+4. ⚙️ No Configuration Support - Lacks mcp.json configuration like modern IDEs support
+
+## 🔐 Privacy-First Architecture
 
 This client implements a **sophisticated data redaction and reconstruction flow** to ensure sensitive information never leaves your environment:
 
@@ -38,7 +50,7 @@ Argument Reconstruction for tool → Invoke selected tool(MCP Server) → Tool(M
 Invoke OpenAI LLM → LLM response Reconstruction for user → Send User Response
 ```
 
-### 🔄 Complete Processing Flow
+## 🔄 Complete Processing Flow
 
 When a user enters a query like *"Give me jira projects assigned to john@company.com"*:
 
@@ -81,7 +93,13 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 ### Run AI Agent/MCP Client 
 
-Run the MCP client which automatically starts mcp server. 
+Run the MCP client ui which automatically starts mcp server. 
+
+```bash
+python mcp_client_ui.py ./mcp_server.py
+```
+
+Run the MCP client cli which automatically starts mcp server. 
 
 ```bash
 python mcp_client.py ./mcp_server.py
@@ -91,11 +109,12 @@ python mcp_client.py ./mcp_server.py
 
 ```
 ai-mcp/
-├── mcp_client.py      # Main MCP client implementation with privacy-first redaction
-├── mcp_server.py      # MCP server implementation with dummy tools
-├── requirements.txt   # Python dependencies
-├── .env              # Environment variables (OpenAI API key)
-└── README.md         # Project documentation
+├── mcp_client.py         # Main MCP client implementation with privacy-first redaction
+├── mcp_client_ui.py      # PyQt5 GUI version with dummy authentication and enhanced UX
+├── mcp_server.py         # MCP server implementation with dummy tools
+├── requirements.txt      # Python dependencies
+├── .env                 # Environment variables (OpenAI API key)
+└── README.md            # Project documentation
 ```
 
 ## 🔧 Modules
@@ -109,6 +128,26 @@ The **main application** that acts as an intelligent AI-powered chat interface:
 - **Connects to OpenAI GPT-4** to understand your natural language questions
 - **Provides a command-line chat interface** where you type questions and get answers
 - **Translates your English questions** into specific tool calls automatically
+
+**🔒 Privacy Protection:**
+- **Automatically hides sensitive data** (only email addresses) before sending to OpenAI
+- **Reconstructs real data** in the final response you see
+- **Ensures your private information never reaches LLM**
+
+**🧠 Smart Features:**
+- **Understands complex requests** like "show tickets for user 1234"
+- **Automatically figures out** which tools to call and in what order
+- **Handles multi-step operations** seamlessly (e.g., first get email, then get tickets)
+
+### MCP Client UI (`mcp_client_ui.py`)
+
+The **graphical user interface** version that provides the same intelligent capabilities with enhanced user experience:
+
+**🖥️ User Interface:**
+- **Modern PyQt5-based GUI** with intuitive chat interface
+- **User authentication system** with login window for secure access , for now it is dummy
+- **Real-time message display** with proper formatting for tables, lists, and bullet points
+- **Colored message types** (User, Assistant, System, Error) for better readability
 
 **🔒 Privacy Protection:**
 - **Automatically hides sensitive data** (only email addresses) before sending to OpenAI
@@ -134,7 +173,50 @@ The **backend service** that provides business tools and data:
 - **Returns structured JSON data** with ticket details, priorities, and status
 - **Simulates real business systems** without needing actual JIRA or weather APIs
 
-## Sample Output
+## Sample Output UI
+
+When you run the UI version you'll see a graphical interface:
+
+```bash
+(ai-mcp) satish@Satishs-Air ai-mcp % python mcp_client.py ./mcp_server.py
+
+
+╭─ FastMCP 2.0 ──────────────────────────────────────────────────────────────╮
+│                                                                            │
+│        _ __ ___ ______           __  __  _____________    ____    ____     │
+│       _ __ ___ / ____/___ ______/ /_/  |/  / ____/ __ \  |___ \  / __ \    │
+│      _ __ ___ / /_  / __ `/ ___/ __/ /|_/ / /   / /_/ /  ___/ / / / / /    │
+│     _ __ ___ / __/ / /_/ (__  ) /_/ /  / / /___/ ____/  /  __/_/ /_/ /     │
+│    _ __ ___ /_/    \__,_/____/\__/_/  /_/\____/_/      /_____(_)____/      │
+│                                                                            │
+│                                                                            │
+│                                                                            │
+│    🖥️  Server name:     jira MCP Server                                     │
+│    📦 Transport:       STDIO                                               │
+│                                                                            │
+│    📚 Docs:            https://gofastmcp.com                               │
+│    🚀 Deploy:          https://fastmcp.cloud                               │
+│                                                                            │
+│    🏎️  FastMCP version: 2.11.0                                              │
+│    🤝 MCP version:     1.12.3                                              │
+│                                                                            │
+╰────────────────────────────────────────────────────────────────────────────╯
+
+
+[08/03/25 19:15:57] INFO     Starting MCP server 'jira MCP Server' with transport 'stdio'                                                                                                         server.py:1442
+
+```
+
+### Login Window
+![Login Window](mcp_client_login.png)
+
+
+### Chat Interface
+![Chat Interface](mcp_client_chat.png)
+
+
+
+## Sample Output CLI
 
 ```bash
 (ai-mcp) satish@Satishs-Air ai-mcp % python mcp_client.py ./mcp_server.py
@@ -267,3 +349,4 @@ INFO:mcp.server.lowlevel.server:Processing request of type CallToolRequest
 
 Please take the necessary precautions for the approaching severe weather.
 ```
+
