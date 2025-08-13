@@ -12,10 +12,6 @@
   - [Set up OpenAI Key](#set-up-openai-key)
   - [Run AI Agent/MCP Client](#run-ai-agentmcp-client)
 - [📁 Project Structure](#-project-structure)
-- [🔧 Modules](#-modules)
-  - [MCP Client (`mcp_client.py`)](#mcp-client-mcp_clientpy)
-  - [MCP Client UI (`mcp_client_ui.py`)](#mcp-client-ui-mcp_client_uipy)
-  - [MCP Server (`mcp_server.py`)](#mcp-server-mcp_serverpy)
 - [Sample Output UI](#sample-output-ui)
 - [Sample Output CLI](#sample-output-cli)
 
@@ -117,61 +113,6 @@ ai-mcp/
 └── README.md            # Project documentation
 ```
 
-## 🔧 Modules
-
-### MCP Client (`mcp_client.py`)
-
-The **main application** that acts as an intelligent AI-powered chat interface:
-
-**🚀 Core Functions:**
-- **Auto-launches the MCP server** when you start the client
-- **Connects to OpenAI GPT-4** to understand your natural language questions
-- **Provides a command-line chat interface** where you type questions and get answers
-- **Translates your English questions** into specific tool calls automatically
-
-**🔒 Privacy Protection:**
-- **Automatically hides sensitive data** (only email addresses) before sending to OpenAI
-- **Reconstructs real data** in the final response you see
-- **Ensures your private information never reaches LLM**
-
-**🧠 Smart Features:**
-- **Understands complex requests** like "show tickets for user 1234"
-- **Automatically figures out** which tools to call and in what order
-- **Handles multi-step operations** seamlessly (e.g., first get email, then get tickets)
-
-### MCP Client UI (`mcp_client_ui.py`)
-
-The **graphical user interface** version that provides the same intelligent capabilities with enhanced user experience:
-
-**🖥️ User Interface:**
-- **Modern PyQt5-based GUI** with intuitive chat interface
-- **User authentication system** with login window for secure access , for now it is dummy
-- **Real-time message display** with proper formatting for tables, lists, and bullet points
-- **Colored message types** (User, Assistant, System, Error) for better readability
-
-**🔒 Privacy Protection:**
-- **Automatically hides sensitive data** (only email addresses) before sending to OpenAI
-- **Reconstructs real data** in the final response you see
-- **Ensures your private information never reaches LLM**
-
-**🧠 Smart Features:**
-- **Understands complex requests** like "show tickets for user 1234"
-- **Automatically figures out** which tools to call and in what order
-- **Handles multi-step operations** seamlessly (e.g., first get email, then get tickets)
-
-### MCP Server (`mcp_server.py`)
-
-The **backend service** that provides business tools and data:
-
-**🛠️ Available Tools:**
-- **`get_tickets_assigned_to_user`** - Finds JIRA tickets assigned to a specific person
-- **`get_email_id_from_user_id`** - Converts user IDs (like "1234") to email addresses
-- **`get_alerts`** - Retrieves weather alerts for US states
-
-**📊 Data & Responses:**
-- **Provides realistic mock data** for testing and demonstration
-- **Returns structured JSON data** with ticket details, priorities, and status
-- **Simulates real business systems** without needing actual JIRA or weather APIs
 
 ## Sample Output UI
 
