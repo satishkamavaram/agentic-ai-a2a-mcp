@@ -10,7 +10,6 @@
   - [Installation](#installation)
   - [Set up OpenAI Key](#set-up-openai-key)
   - [Run AI Agent/MCP Client](#run-ai-agentmcp-client)
-- [📁 Project Structure](#-project-structure)
 - [Sample Output UI](#sample-output-ui)
 - [Sample Output CLI](#sample-output-cli)
 
@@ -88,18 +87,6 @@ Run the MCP client cli which automatically starts mcp server.
 
 ```bash
 python mcp_client.py ./mcp_server.py
-```
-
-## 📁 Project Structure
-
-```
-ai-mcp/
-├── mcp_client.py         # Main MCP client implementation with privacy-first redaction
-├── mcp_client_ui.py      # PyQt5 GUI version with dummy authentication and enhanced UX
-├── mcp_server.py         # MCP server implementation with dummy tools
-├── requirements.txt      # Python dependencies
-├── .env                 # Environment variables (OpenAI API key)
-└── README.md            # Project documentation
 ```
 
 
