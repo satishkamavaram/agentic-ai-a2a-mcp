@@ -4,7 +4,6 @@
 
 - [Introduction](#introduction)
 - [⚠️ Limitations](#️-limitations)
-- [🔐 Privacy-First Architecture](#-privacy-first-architecture)
 - [🔄 Complete Processing Flow](#-complete-processing-flow)
 - [🚀 Quick Start](#-quick-start)
   - [Prerequisites](#prerequisites)
@@ -29,22 +28,12 @@ This **autonomous tool orchestration** eliminates the need for users to understa
 
 ## ⚠️ Limitations
 
-This is a **Proof of Concept (POC)** implementation with several intentional limitations:
+This is a **Proof of Concept (POC)** implementation with with below slimitations:
 
 1. 🔗 Single Server Connection - Can only connect to one MCP server at a time
 2. 📡 Transport Restriction - Only supports stdio transport (no HTTP Streaming)
 3. 🔒 Limited Privacy Protection - Only redacts email addresses (not other sensitive data)
 4. ⚙️ No Configuration Support - Lacks mcp.json configuration like modern IDEs support
-
-## 🔐 Privacy-First Architecture
-
-This client implements a **sophisticated data redaction and reconstruction flow** to ensure sensitive information never leaves your environment:
-
-```
-User Query → User Query Redaction → Invoke OpenAI LLM → Check MCP Tool Selection from OpenAI LLM response → 
-Argument Reconstruction for tool → Invoke selected tool(MCP Server) → Tool(MCP Server) Response -> Tool(MCP Server) Response Redaction → 
-Invoke OpenAI LLM → LLM response Reconstruction for user → Send User Response
-```
 
 ## 🔄 Complete Processing Flow
 
@@ -119,7 +108,7 @@ ai-mcp/
 When you run the UI version you'll see a graphical interface:
 
 ```bash
-(ai-mcp) satish@Satishs-Air ai-mcp % python mcp_client.py ./mcp_server.py
+(ai-mcp) satish@Satishs-Air ai-mcp % python mcp_client_ui.py ./mcp_server.py
 
 
 ╭─ FastMCP 2.0 ──────────────────────────────────────────────────────────────╮
