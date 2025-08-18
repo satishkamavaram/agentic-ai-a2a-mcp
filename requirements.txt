@@ -1,5 +1,5 @@
-fastmcp==2.11.0
-mcp==1.12.3
+fastmcp==2.11.3
+mcp==1.13.0
 openai==1.98.0
 python-dotenv==1.1.1
 PyQt5==5.15.11
