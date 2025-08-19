@@ -130,6 +130,7 @@ Severity: {props.get('severity', 'Unknown')}
 
 if __name__ == "__main__":
     # Run the MCP server with HTTP transport : python mcp_server_http.py
+    #raised oauth issue : https://github.com/jlowin/fastmcp/issues/972
     mcp.run(
         transport="http", 
         port=8000
