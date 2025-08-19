@@ -30,9 +30,7 @@ This **autonomous tool orchestration** eliminates the need for users to understa
 This is a **Proof of Concept (POC)** implementation with with below slimitations:
 
 1. 🔗 Single Server Connection - Can only connect to one MCP server at a time
-2. 📡 Transport Restriction - Only supports stdio transport (no HTTP Streaming)
-3. 🔒 Limited Privacy Protection - Only redacts email addresses (not other sensitive data)
-4. ⚙️ No Configuration Support - Lacks mcp.json configuration like modern IDEs support
+2. 🔒 Limited Privacy Protection - Only redacts email addresses (not other sensitive data)
 
 ## 🔄 Complete Processing Flow
 
