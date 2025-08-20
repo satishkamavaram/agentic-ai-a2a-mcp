@@ -30,7 +30,7 @@ This **autonomous tool orchestration** eliminates the need for users to understa
 This is a **Proof of Concept (POC)** implementation with with below slimitations:
 
 1. 🔗 Single Server Connection - Can only connect to one MCP server at a time
-2. 🔒 Limited Privacy Protection - Only redacts email addresses (not other sensitive data). **Presidio library can be used with Spacy model to redact the PII (emails, phones, etc.) and write custom readaction module to redact custom values to protect intellectual propery.**
+2. 🔒 Limited Privacy Protection - Only redacts email addresses (not other sensitive data). <span style="color:#d73a49"><strong>**Presidio library can be used with Spacy model to redact the PII (emails, phones, etc.) and write custom readaction module to redact custom values to protect intellectual propery.**</strong></span>
 
 ## 🔄 Complete Processing Flow
 
