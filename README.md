@@ -39,16 +39,16 @@ This is a **Proof of Concept (POC)** implementation with with below slimitations
 
 When a user enters a query like *"Give me jira projects assigned to john@company.com"*:
 
-1. ** Input Redaction**: Sensitive data (emails) replaced with tokens
-2. ** LLM Query Analysis**: Redacted query sent to OpenAI to identify required tools
-3. ** Tool Selection**: OpenAI response interpreted to select appropriate MCP tools
-4. ** Argument Reconstruction**: Original sensitive data restored for tool parameters
-5. ** Tool Execution**: MCP server tool invoked with real (unredacted) arguments
-6. ** Response Redaction**: MCP server response redacted before sending to LLM
-7. ** LLM Formatting**: Redacted data sent to OpenAI for response formatting
-8. ** LLM Response**: Structured response received with redacted tokens
-9. ** Response Reconstruction**: Original data restored in LLM-formatted response
-10. ** Final Delivery**: Complete, structured response with real data sent to user
+1. **Input Redaction**: Sensitive data (emails) replaced with tokens
+2. **LLM Query Analysis**: Redacted query sent to OpenAI to identify required tools
+3. **Tool Selection**: OpenAI response interpreted to select appropriate MCP tools
+4. **Argument Reconstruction**: Original sensitive data restored for tool parameters
+5. **Tool Execution**: MCP server tool invoked with real (unredacted) arguments
+6. **Response Redaction**: MCP server response redacted before sending to LLM
+7. **LLM Formatting**: Redacted data sent to OpenAI for response formatting
+8. **LLM Response**: Structured response received with redacted tokens
+9. **Response Reconstruction**: Original data restored in LLM-formatted response
+10. **Final Delivery**: Complete, structured response with real data sent to user
 
 ## 🚀 Quick Start
 
