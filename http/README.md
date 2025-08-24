@@ -10,31 +10,40 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Set up OpenAI Key](#set-up-openai-key)
-  - [Running the HTTP MCP Server](#running-the-http-mcp-server)
-  - [Running the HTTP MCP CLI Client](#running-the-http-mcp-cli-client)
-  - [Running the HTTP MCP UI Client](#running-the-http-mcp-ui-client)
+  - [Running the HTTP MCP Servers](#running-the-http-mcp-servers)
+  - [Running the Multi-Server UI Client](#running-the-multi-server-ui-client)
 
 ## Introduction
 
-This HTTP implementation provides a **web-based Model Context Protocol (MCP) architecture** that enables client-server communication over HTTP transport instead of stdio. The system includes:
+This HTTP implementation provides a **web-based Model Context Protocol (MCP) architecture** that enables MCP client-server communication over HTTP transport instead of stdio. The system features **multi-server support** through a unified client interface, allowing seamless integration with multiple MCP servers simultaneously. The system includes:
 
-- **HTTP MCP Server** (`mcp_server_http.py`) - FastMCP-based server 
-- **HTTP CLI Client** (`mcp_client_http.py`) - Command-line interface with persistent HTTP connections
-- **HTTP UI Client** (`mcp_client_http_ui.py`) - PyQt5-based graphical interface with configuration management
+- **HTTP JIRA MCP Server** (`mcp_jira_server_http.py`) - Jira MCP Server (Port 8000)
+- **HTTP Weather MCP Server** (`mcp_weather_server.py`) - Weather MCP Server (Port 8001)
+- **Multi-Server MCP Client Config** (`mcp.json`) - Configuration file supporting multiple MCP servers
+- **Unified Agentic UI Client** (`mcp_client_http_ui.py`) - Single interface connecting to multiple MCP servers
 
 ## 🔄 Architecture Overview
 
 ```
-┌─────────────────┐    HTTP/JSON     ┌─────────────────┐
-│   MCP Client    │ ←──────────────→ │   MCP Server    │
-│  (CLI/UI)       │    Port 8000     │  (FastMCP)      │
-└─────────────────┘                  └─────────────────┘
-         │                                    
-         │                                    
-    ┌────▼────┐                          
-    │ OpenAI  │                          
-    │   LLM   │                          
-    └─────────┘                          
+┌─────────────────────────────────────────────────────────────────┐
+│                    Multi-Server MCP Client                      │
+│                   (mcp_client_http_ui.py)                       │
+│  ┌─────────────────┐    ┌─────────────────┐                     │
+│  │      PII        │    │   OpenAI LLM    │                     │
+│  │   Redaction     │    │   Integration   │                     │
+│  └─────────────────┘    └─────────────────┘                     │
+└─────────────────────────────────────────────────────────────────┘
+          │                           │
+          │ HTTP/JSON                 │ HTTP/JSON
+          │ Port 8000                 │ Port 8001
+          ▼                           ▼
+┌─────────────────┐           ┌─────────────────┐
+│  JIRA MCP       │           │  Weather MCP    │
+│  Server         │           │  Server         │
+│  (FastMCP)      │           │  (FastMCP)      │
+│                 │           │                 │
+│ • Tickets       │           │ • Alerts        │
+└─────────────────┘           └─────────────────┘
 ```
 
 ## 🚀 Quick Start
@@ -63,97 +72,71 @@ In .env file at the root of project configure your OPENAI_API_KEY
 OPENAI_API_KEY=your_openai_api_key_here
 ```
 
-### Running the HTTP MCP Server
+### Running the HTTP MCP Servers
 
-The MCP server runs as a standalone HTTP service on port 8000:
+The MCP servers run as standalone HTTP services on different ports:
 
 ```bash
 # Navigate to the http directory
 cd http
 
-# Start the HTTP MCP server
-python mcp_server_http.py
+# Terminal 1: Start the HTTP JIRA MCP server
+python mcp_jira_server_http.py
+
+# Terminal 2: Start the HTTP Weather MCP server  
+python mcp_weather_server_http.py
 ```
 
 You should see output similar to:
-```
-╭INFO:root:Server received API_KEY: None
-INFO:root:Server received config path: None
 
+**JIRA Server (Port 8000):**
+```
 
 ╭─ FastMCP 2.0 ──────────────────────────────────────────────────────────────╮
-│                                                                            │
-│        _ __ ___ ______           __  __  _____________    ____    ____     │
-│       _ __ ___ / ____/___ ______/ /_/  |/  / ____/ __ \  |___ \  / __ \    │
-│      _ __ ___ / /_  / __ `/ ___/ __/ /|_/ / /   / /_/ /  ___/ / / / / /    │
-│     _ __ ___ / __/ / /_/ (__  ) /_/ /  / / /___/ ____/  /  __/_/ /_/ /     │
-│    _ __ ___ /_/    \__,_/____/\__/_/  /_/\____/_/      /_____(_)____/      │
-│                                                                            │
-│                                                                            │
-│                                                                            │
-│    🖥️  Server name:     jira MCP Server                                     │
+│    🖥️  Server name:    jira MCP Server                                     │
 │    📦 Transport:       Streamable-HTTP                                     │
 │    🔗 Server URL:      http://127.0.0.1:8000/mcp                           │
-│                                                                            │
-│    📚 Docs:            https://gofastmcp.com                               │
-│    🚀 Deploy:          https://fastmcp.cloud                               │
-│                                                                            │
-│    🏎️  FastMCP version: 2.11.3                                              │
+│    🏎️  FastMCP version: 2.11.3                                             │
 │    🤝 MCP version:     1.13.0                                              │
-│                                                                            │
 ╰────────────────────────────────────────────────────────────────────────────╯
-
-
-[08/18/25 21:40:57] INFO     Starting MCP server 'jira MCP Server' with transport 'http' on http://127.0.0.1:8000/mcp   
 ```
 
-
-### Running the HTTP MCP CLI Client
-
-The command-line client connects to the HTTP server and provides an interactive chat interface:
-
-```bash
-# In a new terminal, navigate to the http directory  
-cd http
-
-# Start the CLI client (server must be running)
-python mcp_client_http.py  http://127.0.0.1:8000/mcp
+**Weather Server (Port 8001):**
 ```
 
-**Interactive Commands:**
-- Type your queries in natural language
-
-
-**Example Usage:**
-```
-MCP HTTP Client Started!
-Type your queries or 'quit' to exit.
-
-Query: Show me tickets assigned to john@company.com
-
-[Calling tool get_tickets_assigned_to_user with args {'user_email': 'john@company.com'}]
-
-| Ticket ID     | Summary                           | Assignee          | Priority | Status      |
-|---------------|-----------------------------------|-------------------|----------|-------------|
-| PROJ-2024-001 | Fix authentication vulnerability  | john@company.com  | HIGH     | IN_PROGRESS |
-| PROJ-2024-002 | Update database schema           | john@company.com  | MEDIUM   | OPEN        |
+╭─ FastMCP 2.0 ──────────────────────────────────────────────────────────────╮
+│    🖥️  Server name:    Weather MCP Server                                  │
+│    📦 Transport:       Streamable-HTTP                                     │
+│    🔗 Server URL:      http://127.0.0.1:8001/mcp                           │
+│    🏎️  FastMCP version: 2.11.3                                             │
+│    🤝 MCP version:     1.13.0                                              │
+╰────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### Running the HTTP MCP UI Client
 
-#### 🔧 Configuration
+#### 🔧 Multi-Server Configuration
 
-The HTTP clients use the `mcp.json` configuration file for server connection settings:
+The HTTP client uses the `mcp.json` configuration file to connect to multiple MCP servers simultaneously. Each server can have its own authentication headers and configuration:
 
 ```json
 {
   "mcpServers": {
     "jira_server": {
-      "transport": "http",
+      "type": "http",
       "url": "http://127.0.0.1:8000/mcp",
       "headers": {
-        "Authorization": "Bearer your_oauth_token_here",
-        "X-Custom-Header": "custom-value"
+        "Authorization": "Bearer token-jira",
+        "X-Custom-Header": "custom-value-jira"
+      },
+      "auth": "oauth"
+    },
+     "weather_server": {
+      "type": "http",
+      "url": "http://127.0.0.1:8001/mcp",
+      "headers": {
+        "Authorization": "Bearer token-weather", 
+        "X-Custom-Header": "custom-value-weather"
       },
       "auth": "oauth"
     }
@@ -161,14 +144,13 @@ The HTTP clients use the `mcp.json` configuration file for server connection set
 }
 ```
 
-The graphical client provides a PyQt5-based interface with configuration management:
+#### 🚀 Starting the UI Client
 
 ```bash
 # In a new terminal, navigate to the http directory
 cd http
 
-# Start the UI client (server must be running)
-python mcp_client_http_ui.py http://127.0.0.1:8000/mcp
+# Start the unified UI client (both jira and weather mcp servers must be running)
+python mcp_client_http_ui.py
 ```
-
 

@@ -1,11 +1,20 @@
 {
   "mcpServers": {
     "jira_server": {
-      "transport": "http",
+      "type": "http",
       "url": "http://127.0.0.1:8000/mcp",
       "headers": {
-        "Authorization": "Bearer token",
-        "X-Custom-Header": "custom-value"
+        "Authorization": "Bearer token-jira",
+        "X-Custom-Header": "custom-value-jira"
+      },
+      "auth": "oauth"
+    },
+     "weather_server": {
+      "type": "http",
+      "url": "http://127.0.0.1:8001/mcp",
+      "headers": {
+        "Authorization": "Bearer token-weather",
+        "X-Custom-Header": "custom-value-weather"
       },
       "auth": "oauth"
     }

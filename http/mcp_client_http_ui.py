@@ -21,8 +21,10 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import pyqtSignal, QObject, QTimer
 from qasync import QEventLoop, asyncSlot, asyncClose
 from PyQt5.QtWidgets import QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout
-
+import logging
 load_dotenv()
+
+logging.basicConfig(level=logging.INFO)
 
 # [Previous utility functions remain exactly the same...]
 # Global cache for redaction mapping
@@ -221,9 +223,8 @@ class MCPClient(QObject):
                 })
 
 class ChatWindow(QMainWindow):
-    def __init__(self, server_script_path: str, auth_token: str):
+    def __init__(self,auth_token: str):
         super().__init__()
-        self.server_script_path = server_script_path
         self.auth_token = auth_token
         self._shutting_down = False
         self.connected_client = None  # Store persistent connection
@@ -281,14 +282,8 @@ class ChatWindow(QMainWindow):
         """Initialize the MCP client with persistent connection"""
         try:
             # Load configuration from mcp.json
+            logging.info(f"Loading MCP configuration from mcp.json")
             config = self.load_mcp_config()
-            
-            # Override URL if provided via command line
-            if hasattr(self, 'server_script_path') and self.server_script_path:
-                # Update the first server's URL with command line argument
-                for server_name, server_config in config["mcpServers"].items():
-                    server_config["url"] = self.server_script_path
-                    break
             
             client_obj = Client(config)
             self.connected_client = await client_obj.__aenter__()  # Enter the context manually
@@ -533,7 +528,7 @@ async def main():
         token = login.token  # Store the token (you'll need to add this to LoginWindow)
         
         # Initialize chat window with token
-        window = ChatWindow(sys.argv[1], token)  # Pass token to ChatWindow
+        window = ChatWindow(token)  # Pass token to ChatWindow
         window.show()
         
         with loop:
