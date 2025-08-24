@@ -11,7 +11,8 @@
   - [Installation](#installation)
   - [Set up OpenAI Key](#set-up-openai-key)
   - [Running the HTTP MCP Servers](#running-the-http-mcp-servers)
-  - [Running the Multi-Server UI Client](#running-the-multi-server-ui-client)
+  - [Running the Multi-Server UI Client](#running-the-http-mcp-ui-client)
+
 
 ## Introduction
 
