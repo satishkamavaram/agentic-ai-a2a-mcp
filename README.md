@@ -46,7 +46,7 @@ When a user enters a query like *"Give me jira projects assigned to john@company
 5. **Tool Execution**: MCP server tool invoked with real (unredacted) arguments
 6. **Response Redaction**: MCP server response redacted before sending to LLM
 7. **LLM Formatting**: Redacted data sent to OpenAI for response formatting
-8. **LLM Response**: Structured response received with redacted tokens
+8. **LLM Response**: Structured response received with redacted tokens. **Repeat steps 3 to 7 , if response has tool disconvery**
 9. **Response Reconstruction**: Original data restored in LLM-formatted response
 10. **Final Delivery**: Complete, structured response with real data sent to user
 
