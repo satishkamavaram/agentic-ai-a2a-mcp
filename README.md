@@ -37,7 +37,7 @@ This is a **Proof of Concept (POC)** implementation with with below slimitations
 
 ## 🔄 Complete Processing Flow
 
-When a user enters a query like *"Give me jira projects assigned to john@company.com"*:
+When a user enters a query like *"Give me jira projects assigned to satish.k@test.com"*:
 
 1. **Input Redaction**: Sensitive data (emails) replaced with tokens
 2. **LLM Query Analysis**: Redacted query sent to OpenAI to identify required tools
