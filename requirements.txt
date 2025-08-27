@@ -4,3 +4,10 @@ openai==1.98.0
 python-dotenv==1.1.1
 PyQt5==5.15.11
 qasync==0.27.1
+#langgraph==0.2.34
+#langchain
+#langchain-openai
+#langchain-core==0.3.6
+google-adk
+litellm==1.72.0
+#litellm[proxy]
