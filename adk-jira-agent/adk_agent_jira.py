@@ -1,4 +1,8 @@
 # reference : https://google.github.io/adk-docs/agents/llm-agents/
+#https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/adk_expense_reimbursement/agent.py
+#https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/adk_expense_reimbursement/agent_executor.py
+#https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/adk_expense_reimbursement
+#https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/airbnb_planner_multiagent
 
 import asyncio
 
@@ -106,7 +110,7 @@ def simple_after_model_modifier(
 agent = LlmAgent(
     model=LiteLlm(model="openai/gpt-4-turbo"), # Using ChatGPT model
     name="jira_agent",
-    instruction="You are a Jira assistant agent. You can fetch Jira tickets assigned to a user by email and retrieve email IDs for given user IDs. Answer user queries about Jira tickets and user emails using the available tools.",
+    instruction="You are a Jira assistant agent. You can fetch Jira tickets assigned to a user by email and retrieve email IDs for given user IDs. Answer user queries about Jira tickets and user emails using the available tools. You can create appointments",
    # planner=planner,
     #tools=[get_tickets_assigned_to_user, get_email_id_from_user_id],
     tools=[MCPToolset(
@@ -133,7 +137,8 @@ async def main():
                 final_answer = event.content.parts[0].text.strip()
                 print(f"FINAL ANSWER : {final_answer}")
 
-    call_agent("jira tickets assigned to 1234")
+    call_agent("schedule a appointment on 4th sept 2026 at 4:30 am  from email satish.k@test.com and to these users test1@test.com test2@test.com to discuss about future of agentic AI")
+    #call_agent("jira tickets assigned to 1234")
     #call_agent("weather info nw state")
 
 
