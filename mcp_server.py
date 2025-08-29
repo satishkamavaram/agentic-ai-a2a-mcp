@@ -1,6 +1,10 @@
 from fastmcp import FastMCP
 import os
 import logging
+import datetime
+
+CURRENT_YEAR = datetime.datetime.now().year
+
 mcp = FastMCP("jira MCP Server")
 logging.basicConfig(level=logging.INFO)
 api_key = os.getenv("API_KEY")
@@ -94,6 +98,40 @@ Headline: {props.get('headline', 'Unknown')}
 Description: {props.get('description', 'Unknown')}
 Severity: {props.get('severity', 'Unknown')}
 """
+
+
+
+
+@mcp.tool(description=f"Create an appointment with attendees, subject, date, and time. Always provide the date in YYYY-MM-DD format, including the year. If the user omits the year, use {CURRENT_YEAR}.")
+def create_appointment(to_emails: list, from_email: str, subject: str, date: str, time: str) -> dict:
+    
+    """
+    Create an appointment and return confirmation details.
+
+    Args:
+        to_emails (list): List of attendee email addresses
+        from_email (str): Organizer's email address
+        subject (str): Appointment subject
+        date (str): Date of the appointment. Format: YYYY-MM-DD (e.g., 2025-09-01). Always include the year. If the user omits the year, use {CURRENT_YEAR}.
+        time (str): Time of the appointment. Format: HH:MM (24-hour, e.g., 14:30)
+    Returns:
+        dict: Confirmation details
+
+    Note:
+        - date must always be in ISO format: YYYY-MM-DD (e.g., 2025-09-01). The year is required. If the user omits the year, use {CURRENT_YEAR}.
+        - time must be in 24-hour format: HH:MM (e.g., 14:30)
+    """
+    appointment = {
+        "to": to_emails,
+        "from": from_email,
+        "subject": subject,
+        "date": date,
+        "time": time,
+        "status": "created",
+        "appointment_id": f"APT-{date.replace('-', '')}-{time.replace(':', '')}"
+    }
+    logging.info(f"Appointment created: {appointment}")
+    return appointment
 
 if __name__ == "__main__":
     # Run with streamable-http transport for HTTP-based communication in containers

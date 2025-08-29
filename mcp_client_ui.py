@@ -174,8 +174,8 @@ class MCPClient(QObject):
 
             response = await self.session.list_tools()
             tools = response.tools
-            self.message_received.emit("system",f"User authenticated with token: {self.auth_token}")
-            self.message_received.emit("system", f"Successfully connected to MCP server. Discovered tools: {[tool.name for tool in tools]}")
+            #self.message_received.emit("system",f"User authenticated with token: {self.auth_token}")
+            self.message_received.emit("system", f"Successfully authenticated and connected to MCP server. Discovered tools: {[tool.name for tool in tools]}")
             self.connected = True
             self.connection_ready.emit(True)
             self.status_update.emit("Ready")
@@ -201,7 +201,7 @@ class MCPClient(QObject):
             if not self.client:
                 self.client = AsyncOpenAI(api_key=os.environ["OPENAI_API_KEY"])
             
-            query = redact_emails_in_text(query)
+            #query = redact_emails_in_text(query)
             messages = [{"role": "user", "content": query}]
             
             response = await self.session.list_tools()
@@ -223,7 +223,8 @@ class MCPClient(QObject):
                 response = await self.invoke_llm(self.client, available_tools, messages)
                 assistant_message = response.choices[0].message
 
-            response_content = reconstruct_emails_in_content(response.choices[0].message.content)
+            #response_content = reconstruct_emails_in_content(response.choices[0].message.content)
+            response_content = response.choices[0].message.content
             self.message_received.emit("assistant", response_content)
             return True
             
@@ -250,12 +251,12 @@ class MCPClient(QObject):
             for tool_call in tool_calls:
                 tool_name = tool_call.function.name
                 tool_args = json.loads(tool_call.function.arguments)
-                tool_args = reconstruct_emails_in_content(tool_args)
+                #tool_args = reconstruct_emails_in_content(tool_args)
                 
                 #self.message_received.emit("system", f"Calling tool {tool_name} with args {tool_args}")
                 
                 result = await self.session.call_tool(tool_name, tool_args)
-                result.content = [redact_emails_in_content(item) for item in result.content]
+                #result.content = [redact_emails_in_content(item) for item in result.content]
                 
                 messages.append({
                     "role": "tool",
