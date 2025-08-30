@@ -7,6 +7,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse
 import logging
+from context_vars import set_access_token
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -27,25 +28,30 @@ class OAuth2Middleware(BaseHTTPMiddleware):
         print(f"auth agent card:::::{agent_card}")
 
     async def dispatch(self, request: Request, call_next):
-        path = request.url.path
-        logger.info(f"In Auth Middleware:::::{request.headers}")
-        logger.info(f"self.public_paths:::::{self.public_paths}")
-        logger.info(f"path:::::{path}")
-        # Allow public paths and anonymous access
-        if path in self.public_paths:
+        try:
+            path = request.url.path
+            logger.info(f"In Auth Middleware:::::{request.headers}")
+            logger.info(f"self.public_paths:::::{self.public_paths}")
+            logger.info(f"path:::::{path}")
+            # Allow public paths and anonymous access
+            if path in self.public_paths:
+                return await call_next(request)
+            
+            # Authenticate the request
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return self._unauthorized(
+                    'Missing or malformed Authorization header.', request
+                )
+
+            access_token = auth_header.split('Bearer ')[1]
+            logger.info(f"access token received: {access_token}")
+           
+            set_access_token(access_token) # setting accesss token at context vars so that can be accessed in mcp tools
             return await call_next(request)
-        
-        # Authenticate the request
-        auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith('Bearer '):
-            return self._unauthorized(
-                'Missing or malformed Authorization header.', request
-            )
-
-        access_token = auth_header.split('Bearer ')[1]
-        logger.info(f"access token received: {access_token}")
-
-        return await call_next(request)
+        finally:
+            set_access_token(None) # Clear the access token after the request is done
+            logger.info(f"::::::sending response:::::::")
 
     def _forbidden(self, reason: str, request: Request):
         accept_header = request.headers.get('accept', '')
