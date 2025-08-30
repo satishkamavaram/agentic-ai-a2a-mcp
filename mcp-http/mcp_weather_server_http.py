@@ -1,8 +1,8 @@
-from fastmcp import FastMCP
+from fastmcp import FastMCP, Context
 import os
 import logging
 from fastmcp.server.dependencies import get_http_headers
-
+from dataclasses import dataclass
 mcp = FastMCP("Weather MCP Server")
 logging.basicConfig(level=logging.INFO)
 api_key = os.getenv("API_KEY")
@@ -33,7 +33,27 @@ auth = RemoteAuthProvider(
 #mcp.auth = auth
 
 
+@dataclass
+class StateInfo:
+    state: str
 
+
+@mcp.tool(description="Collect state information interactively from user if not provided")
+async def collect_state_info(ctx: Context) -> str:
+    """Collect state information through interactive prompts."""
+    result = await ctx.elicit(
+        message="Please provide your two letter German state code (e.g. BW, BY)",
+        response_type=StateInfo
+    )
+    
+    if result.action == "accept":
+        state = result.data
+        return get_weather_alerts(state.state)
+    elif result.action == "decline":
+        return "Information not provided"
+    else:
+        return "Operation cancelled"
+    
 @mcp.tool(description="Get weather alerts for a German state")
 async def get_weather_alerts(state: str) -> str:
     """Get weather alerts for a German state.
@@ -43,6 +63,7 @@ async def get_weather_alerts(state: str) -> str:
     """
     headers = get_http_headers()
     logging.info(f"headers received: {headers}")
+
     data = {
         "features": [
             {

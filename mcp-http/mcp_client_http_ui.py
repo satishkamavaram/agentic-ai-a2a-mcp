@@ -278,6 +278,18 @@ class ChatWindow(QMainWindow):
         else:
             self.statusBar().showMessage("Connection failed")
 
+    async def elicitation_handler(message: str, response_type: type, params, context):
+        logging.info(f"**elicitation_handler********")
+        # Present the message to the user and collect input
+        user_input = input(f"{message}: ")
+        
+        # Create response using the provided dataclass type
+        # FastMCP converted the JSON schema to this Python type for you
+        response_data = response_type(value=user_input)
+        
+        # You can return data directly - FastMCP will implicitly accept the elicitation
+        return response_data
+
     async def initialize_client(self):
         """Initialize the MCP client with persistent connection"""
         try:
@@ -285,7 +297,7 @@ class ChatWindow(QMainWindow):
             logging.info(f"Loading MCP configuration from mcp.json")
             config = self.load_mcp_config()
             
-            client_obj = Client(config)
+            client_obj = Client(config,elicitation_handler=self.elicitation_handler)
             self.connected_client = await client_obj.__aenter__()  # Enter the context manually
             
             await self.connected_client.ping()

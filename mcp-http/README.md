@@ -79,7 +79,7 @@ The MCP servers run as standalone HTTP services on different ports:
 
 ```bash
 # Navigate to the http directory
-cd http
+cd mcp-http
 
 # Terminal 1: Start the HTTP JIRA MCP server
 python mcp_jira_server_http.py
@@ -149,7 +149,7 @@ The HTTP client uses the `mcp.json` configuration file to connect to multiple MC
 
 ```bash
 # In a new terminal, navigate to the http directory
-cd http
+cd mcp-http
 
 # Start the unified UI client (both jira and weather mcp servers must be running)
 python mcp_client_http_ui.py
