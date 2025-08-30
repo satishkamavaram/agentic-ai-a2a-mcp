@@ -8,31 +8,25 @@
   - [Installation](#installation)
   - [Set up OpenAI Key](#set-up-openai-key)
   - [Run MCP server](#run-mcp-server)
-  - [Run jira agent](#run-jira-agent)
-
+  - [Run A2A Jira Agent Server](#run-a2a-jira-agent-server)
+  - [Run A2A Jira Agent Client](#run-a2a-jira-agent-client)
 
 
 # Introduction
 
-## How It Works
+This project demonstrates how to build a intelligent Jira assistant using the A2A protocol and MCP server architecture:
 
-The agent uses Google ADK to wrap OpenAI LLMs and MCP tools. When a user asks a Jira-related question, the agent:
+- **A2A Jira Client**: The user enters a natural language query in the client tool.
+- **A2A Jira Server**: Receives the query, consults the LLM (OpenAI/ChatGPT), and orchestrates tool calls to the Jira MCP server.
+- **Jira MCP Server**: Exposes Jira-related tools (e.g., fetch tickets, resolve user IDs,create appointment) as MCP endpoints.
 
-1. Analyzes the query and determines which tools are needed
-2. Resolves dependencies (e.g., userId → email)
-3. Calls MCP tools in the correct order
-4. Returns a natural language answer
+The A2A Jira Server acts as an agent, using the A2A protocol to communicate with clients and the MCP protocol to interact with backend tools. The agent card (discovery document) is accessible at `/.well-known/agent-card` and describes the agent's capabilities and skills.
 
-
-A sophisticated jira agent client built using google adk library. This agent enables natural language queries to OpenAI LLM, which intelligently selects and orchestrates **multiple MCP server tool calls includes dynamic tool chaining**
-
-The system demonstrates **intelligent tool chaining** where the LLM dynamically identifies dependencies between tools. For example, when a user provides only a `userId`, the LLM automatically:
-1. **Recognizes the data dependency** - determines that an email address is needed for the target operation
-2. **Orchestrates tool sequence** - first calls `get_email_id_from_user_id` to resolve the userId to an email
-3. **Chains subsequent calls** - uses the retrieved email to call tools like `get_tickets_assigned_to_user`
-
-This **autonomous tool orchestration** eliminates the need for users to understand internal data relationships or tool dependencies, enabling natural language queries like *"show jira tickets for user 1234"* to be automatically expanded into the correct sequence of tool calls.
-
+This project demonstrates:
+- How A2A protocol enables agent remote invocation
+- How MCP server exposes business logic as composable tools
+- How LLMs can orchestrate tool chaining and dependency resolution
+- How agent cards enable discoverability and interoperability
 
 
 ## 🚀 Quick Start
@@ -46,7 +40,7 @@ This **autonomous tool orchestration** eliminates the need for users to understa
 
 ```bash
 # Clone or navigate to the project directory
-cd $HOME/ai-mcp/a2a-jira-agent-server
+cd $HOME/ai-mcp/a2a-jira-agent
 
 # install with pip
 python3 -m venv ai-a2a
@@ -70,12 +64,20 @@ python mcp_jira_server_http.py
 
 ### Run A2A jira agent server
 
+By default server runs on 10001 port. Agent Card can be accessed using 
+http://localhost:10001/.well-known/agent-card
+
 ```bash
 python a2a_jira_server.py
 ```
+
 
 ### Run A2A jira agent client
 
 ```bash
 python a2a_jira_client.py
 ```
+
+**sample queries**:
+- schedule a appointment on 4th sept 2026 at 4:30 am  from email satish.k@test.com and to these users test1@test.com test2@test.com to discuss about future of agentic AI
+- jira tickets assigned to 1234
