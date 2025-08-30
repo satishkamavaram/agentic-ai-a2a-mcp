@@ -95,6 +95,12 @@ class JirarExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ):
+        headers = {}
+        if (hasattr(context, 'call_context') and 
+            hasattr(context.call_context, 'state') and 
+            isinstance(context.call_context.state, dict)):
+            headers = context.call_context.state.get('headers', {})
+        logger.info(f"headers: {headers}")
         updater = TaskUpdater(event_queue, context.task_id, context.context_id)
         if not context.current_task:
             await updater.update_status(TaskState.submitted)

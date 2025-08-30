@@ -1,6 +1,7 @@
 import logging
 import click
 import uvicorn
+import click
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
@@ -8,7 +9,7 @@ from a2a.types import (
     AgentCapabilities,
     AgentCard,
     AgentSkill,
-#    OAuthFlows,ClientCredentialsOAuthFlow
+    OAuthFlows,ClientCredentialsOAuthFlow,OAuth2SecurityScheme
 )
 from dotenv import load_dotenv
 from jira_agent_executor import (
@@ -19,6 +20,7 @@ from jira_agent import (
 )
 from starlette.responses import JSONResponse
 from auth_middleware import OAuth2Middleware
+from starlette.middleware import Middleware
 
 load_dotenv()
 
@@ -61,12 +63,30 @@ def main(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
        #     "schemes": ["Bearer"],
        #     "credentials": "required"  # or "optional" depending on your needs
        # },
+       securitySchemes={
+        'oauth2_m2m_client': OAuth2SecurityScheme(
+            description='',
+            flows=OAuthFlows(
+                clientCredentials=ClientCredentialsOAuthFlow(
+                    tokenUrl=f'https://localhost:8080/oauth/token',
+                    scopes={
+                        'read:employee_status': 'Allows confirming whether a person is an active employee of the company.',
+                    },
+                ),
+            ),
+        ),
+    },
+    security=[{
+        'oauth2_m2m_client': [
+            'read:employee_status',
+        ],
+    }],
     )
 
     adk_agent = JiraAgent()
     runner = adk_agent.get_runner()
     print(f"runner:::::{runner}")
-    agent_executor = JirarExecutor(runner, agent_card)
+    agent_executor = JirarExecutor( runner, agent_card)
     print(f"agent card:::::{agent_card}")
     request_handler = DefaultRequestHandler(
         agent_executor=agent_executor, task_store=InMemoryTaskStore()
@@ -75,13 +95,20 @@ def main(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
     a2a_app = A2AStarletteApplication(
         agent_card=agent_card, http_handler=request_handler
     )
-    app = a2a_app.build()
-
-    app.add_middleware(
+    middleware = [
+    Middleware(
         OAuth2Middleware,
         agent_card=agent_card,
         public_paths=['/.well-known/agent-card'],
     )
+]
+    app = a2a_app.build(middleware=middleware)
+
+    #app.add_middleware(
+    #    OAuth2Middleware,
+    #    agent_card=agent_card,
+    #    public_paths=['/.well-known/agent-card'],
+    #)
 
     @app.route("/.well-known/agent-card", methods=["GET"])
     async def get_agent_card(request):

@@ -6,9 +6,10 @@ from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse
+import logging
 
-
-
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 class OAuth2Middleware(BaseHTTPMiddleware):
     """Starlette middleware that authenticates A2A access using an OAuth2 bearer token."""
@@ -22,22 +23,18 @@ class OAuth2Middleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.agent_card = agent_card
         self.public_paths = set(public_paths or [])
-
-        # Process the AgentCard to identify what (if any) Security Requirements are defined at the root of the
-        # AgentCard, indicating agent-level authentication/authorization.
-
-        # Use app state for this demonstration (simplicity)
-        self.a2a_auth = {}
-
-        print(f"agent card:::::{agent_card}")
+        
+        print(f"auth agent card:::::{agent_card}")
 
     async def dispatch(self, request: Request, call_next):
         path = request.url.path
-
+        logger.info(f"In Auth Middleware:::::{request.headers}")
+        logger.info(f"self.public_paths:::::{self.public_paths}")
+        logger.info(f"path:::::{path}")
         # Allow public paths and anonymous access
-        if path in self.public_paths or not self.a2a_auth:
+        if path in self.public_paths:
             return await call_next(request)
-        print(f"In Auth Middleware:::::{request.headers}")
+        
         # Authenticate the request
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
@@ -46,8 +43,8 @@ class OAuth2Middleware(BaseHTTPMiddleware):
             )
 
         access_token = auth_header.split('Bearer ')[1]
-        print(f"access token is {access_token}")
-        
+        logger.info(f"access token received: {access_token}")
+
         return await call_next(request)
 
     def _forbidden(self, reason: str, request: Request):

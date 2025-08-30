@@ -47,15 +47,16 @@ async def interact_with_server(client: A2AClient) -> None:
 async def main() -> None:
     print('Welcome to the A2A client!')
     print("Please enter your query (type 'exit' to quit):")
-    async with httpx.AsyncClient(timeout=30) as httpx_client:
+    headers = {"Authorization": "Bearer satish_token_a2a"}
+    async with httpx.AsyncClient(timeout=30, headers=headers) as httpx_client:
         card_resolver = A2ACardResolver(
                     httpx_client, 'http://localhost:10001' # connecting to jira agent server
                 )  
         card = await card_resolver.get_agent_card()
         print(f"Resolved jira agent card: {card}")
-        client = httpx.AsyncClient(timeout=30)
+        #client = httpx.AsyncClient(timeout=30)
         a2a_client =  A2AClient(
-            client,card, url='http://localhost:10001'
+            httpx_client,card, url='http://localhost:10001'
         )
         await interact_with_server(a2a_client)
 

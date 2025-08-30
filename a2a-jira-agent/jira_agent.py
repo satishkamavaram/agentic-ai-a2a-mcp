@@ -24,9 +24,6 @@ class JiraAgent:
     def get_runner(self) -> Runner:
         return self._runner
 
-    def get_processing_message(self) -> str:
-        return 'Processing the Jira request...'
-
     def _build_agent(self) -> LlmAgent:
         agent = LlmAgent(
             model=LiteLlm(model="openai/gpt-4-turbo"), # Using ChatGPT model
@@ -36,7 +33,7 @@ class JiraAgent:
             tools=[MCPToolset(
                             connection_params=StreamableHTTPConnectionParams(
                                 url="http://localhost:8000/mcp",
-                                headers={"Authorization": "Bearer satish-token"}
+                                headers={"Authorization": f"Bearer satish-token"}
                             ),
                         )],
         )

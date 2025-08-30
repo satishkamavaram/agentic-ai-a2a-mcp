@@ -12,3 +12,4 @@ google-adk==1.13.0
 litellm==1.72.0
 #litellm[proxy]
 a2a-sdk==0.3.3
+click==8.2.1
