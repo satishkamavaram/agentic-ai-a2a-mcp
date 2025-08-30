@@ -30,7 +30,7 @@ This **autonomous tool orchestration** eliminates the need for users to understa
 This is a **Proof of Concept (POC)** implementation with with below slimitations:
 
 1. **Single Server Connection** - Can only connect to one MCP server at a time. 
-![Important](https://img.shields.io/badge/IMPORTANT-red?style=for-the-badge) **In this repo, under the http folder there is a support for connecting to multiple MCP servers via mcp.json and support for http**
+![Important](https://img.shields.io/badge/IMPORTANT-red?style=for-the-badge) **In this repo, under the mcp-http folder there is a support for connecting to multiple MCP servers via mcp.json and support for http**
 2. **Limited Privacy Protection** - Only redacts email addresses (not other sensitive data).
 ![Important](https://img.shields.io/badge/IMPORTANT-red?style=for-the-badge) **Presidio library can be used with Spacy model to redact the PII (emails, phones, etc.) and write custom readaction module to redact custom values to protect intellectual propery.**
 
