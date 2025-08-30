@@ -14,7 +14,7 @@
 
 # Introduction
 
-This project demonstrates how to build a intelligent Jira assistant using the A2A protocol and MCP server architecture:
+This project demonstrates how to build a intelligent Jira assistant using the A2A protocol and MCP server architecture with Authentication enabled:
 
 - **A2A Jira Client**: The user enters a natural language query in the client tool.
 - **A2A Jira Server**: Receives the query, consults the LLM (OpenAI/ChatGPT), and orchestrates tool calls to the Jira MCP server.
@@ -23,7 +23,7 @@ This project demonstrates how to build a intelligent Jira assistant using the A2
 The A2A Jira Server acts as an agent, using the A2A protocol to communicate with clients and the MCP protocol to interact with backend tools. The agent card (discovery document) is accessible at `/.well-known/agent-card` and describes the agent's capabilities and skills.
 
 This project demonstrates:
-- How A2A protocol enables agent remote invocation
+- How A2A protocol enables agent remote invocation with authentication enabled
 - How MCP server exposes business logic as composable tools
 - How LLMs can orchestrate tool chaining and dependency resolution
 - How agent cards enable discoverability and interoperability
