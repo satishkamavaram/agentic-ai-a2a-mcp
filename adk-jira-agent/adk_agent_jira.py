@@ -1,8 +1,4 @@
 # reference : https://google.github.io/adk-docs/agents/llm-agents/
-#https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/adk_expense_reimbursement/agent.py
-#https://github.com/a2aproject/a2a-samples/blob/main/samples/python/agents/adk_expense_reimbursement/agent_executor.py
-#https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/adk_expense_reimbursement
-#https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents/airbnb_planner_multiagent
 
 import asyncio
 
