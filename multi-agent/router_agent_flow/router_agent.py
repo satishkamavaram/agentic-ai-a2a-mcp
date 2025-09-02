@@ -18,7 +18,7 @@ from weather_agent import (
     WeatherAgent,
 )
 
-APP_NAME = "sequential_pipeline_agent"
+APP_NAME = "router_agent"
 USER_ID = "1234"
 SESSION_ID = "session1234"
 
@@ -47,7 +47,7 @@ router_agent = LlmAgent(
             #                    headers={"Authorization": f"Bearer satish-token"}
              #               ),
             #            )],
-            output_key="jira_key",
+            output_key="router_agent_key",
             before_model_callback=simple_before_model_modifier,
             description="Main router agent",
         )
