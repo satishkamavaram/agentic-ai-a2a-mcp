@@ -80,7 +80,7 @@ To enable authentication and authorization for your agents, you need to set up K
 2. Create a new realm for your project.
 3. Create a client (clientId) for your application (e.g., `testclient`).
 4. Add users to your realm who will authenticate with the agents.
-5. In your agent server code (`mcp_appointment_server_http.py`), configure the JWTVerifier with the following fields according to your Keycloak setup:
+5. In your agent server code (`mcp_appointment_server.py`), configure the JWTVerifier with the following fields according to your Keycloak setup:
   - `jwks_uri`: The JWKS endpoint for your realm (e.g., `http://127.0.0.1:8080/realms/<your-realm>/protocol/openid-connect/certs`)
   - `issuer`: The issuer URL for your realm (e.g., `http://127.0.0.1:8080/realms/<your-realm>`)
   - `audience`: The client ID you created above (should come in "aud" field in your jwt token)
@@ -122,7 +122,7 @@ tools=[MCPToolset(
 ### Run MCP appointment server
 
 ```bash
-python3 mcp_appointment_server_http.py
+python3 mcp_appointment_server.py
 ```
 
 ### Run router agent
