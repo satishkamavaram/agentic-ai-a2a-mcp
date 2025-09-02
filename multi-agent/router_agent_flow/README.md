@@ -20,7 +20,7 @@ This project demonstrates a multi-agent orchestration pattern using the Google A
 
 The router agent uses an LLM (e.g., ChatGPT Turbo) to interpret the user's intent and route the request to one or more sub-agents:
 
-- **Jira Agent**: Handles Jira-related queries (e.g., ticket lookup, user info) with local tools
+- **Jira Agent**: Handles Jira-related queries with local tools
 - **Appointment Agent**: Handles invite scheduling with remote tools by connecting to **remote MCP server for tools with Authentication enabled**
 - **Weather Agent**: Handles weather and alert queries with local tools
 
@@ -140,10 +140,35 @@ python3 router_agent.py
 ```
 User Query: schedule a appointment next week tuesday morning 4:30 from email satish.k@test.com and to these users test1@test.com test2@test.com to discuss about future of agentic AI
 
-FINAL ANSWER : The appointment to discuss the future of agentic AI has been successfully scheduled for September 9, 2025, at 4:30 AM. The attendees are test1@test.com and test2@test.com, and the organizer's email is satish.k@test.com.
+****************************************************
+\nDEBUG EVENT: content=Content(
+  parts=[
+    Part(
+      text="""The meeting to discuss the future of agentic AI has been successfully scheduled for September 9, 2026, at 4:30 AM. Here are the details:
 
-User Query:  weather info of BA state
+- **Date:** September 9, 2026
+- **Time:** 04:30 AM
+- **From:** satish.k@test.com
+- **To:** test1@test.com, test2@test.com
+- **Subject:** Meeting to discuss about future of agentic AI
 
-FINAL ANSWER : The current weather alert for BA (Bavaria) state includes a severe thunderstorm warning. You are advised to take cover immediately. The severity of this weather condition is marked as severe.
+The appointment ID is APT-20260904-0430."""
+    ),
+  ],
+  role='model'
+) grounding_metadata=None partial=False turn_complete=None finish_reason=None error_code=None error_message=None interrupted=None custom_metadata=None usage_metadata=GenerateContentResponseUsageMetadata(
+  candidates_token_count=110,
+  prompt_token_count=692,
+  total_token_count=802
+) live_session_resumption_update=None input_transcription=None output_transcription=None invocation_id='e-ca9e8118-3792-439b-92d3-c0d45e4b5fa7' author='appointment_agent' actions=EventActions(skip_summarization=None, state_delta={'appointment_key': 'The meeting to discuss the future of agentic AI has been successfully scheduled for September 9, 2026, at 4:30 AM. Here are the details:\n\n- **Date:** September 9, 2026\n- **Time:** 04:30 AM\n- **From:** satish.k@test.com\n- **To:** test1@test.com, test2@test.com\n- **Subject:** Meeting to discuss about future of agentic AI\n\nThe appointment ID is APT-20260904-0430.'}, artifact_delta={}, transfer_to_agent=None, escalate=None, requested_auth_configs={}) long_running_tool_ids=None branch=None id='c8e1f087-b5f8-41e2-ac9d-259894959d97' timestamp=1756841660.187312
+:::::::::::::::::::::::::::::::::::::::::::::::::::
+FINAL ANSWER : The meeting to discuss the future of agentic AI has been successfully scheduled for September 9, 2026, at 4:30 AM. Here are the details:
 
+- **Date:** September 9, 2026
+- **Time:** 04:30 AM
+- **From:** satish.k@test.com
+- **To:** test1@test.com, test2@test.com
+- **Subject:** Meeting to discuss about future of agentic AI
+
+The appointment ID is APT-20260904-0430.
 ```
