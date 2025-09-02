@@ -72,11 +72,11 @@ async def main():
                 print(f":::::::::::::::::::::::::::::::::::::::::::::::::::")
                 print(f"FINAL ANSWER : {final_answer}")
 
-    call_agent("schedule a appointment next week tuesday morning 4:30 from email satish.k@test.com and to these users test1@test.com test2@test.com to discuss about future of agentic AI")
+    #call_agent("schedule a appointment next week tuesday morning 4:30 from email satish.k@test.com and to these users test1@test.com test2@test.com to discuss about future of agentic AI")
     #call_agent("schedule a appointment on 4th sept 2026 at 4:30 am  from email satish.k@test.com and to these users test1@test.com test2@test.com to discuss about future of agentic AI")
-    #call_agent("schedule a meeting invite with test1@test.com test2@test.com on 4th sept 2026 at 4:30 am  from email satish.k@test.com to discuss about future of agentic AI")
-    call_agent("jira tickets assigned to 1234 and give count and my emailId")
-    call_agent("weather info of BA state")
+    call_agent("schedule a meeting invite with recipients test1@test.com test2@test.com on 4th sept 2026 at 4:30 am  from email satish.k@test.com to discuss about future of agentic AI")
+    #call_agent("jira tickets assigned to 1234 and give count and my emailId")
+    #call_agent("weather info of BA state")
     
 
 if __name__ == "__main__":

@@ -8,6 +8,8 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Set up OpenAI Key](#set-up-openai-key)
+  - [Set up Keycloak](#set-up-keycloak)
+  - [Obtain Keycloak JWT Token](#obtain-keycloak-jwt-token)
   - [Run Router Agent](#run-router-agent)
   - [Sample Queries](#sample-queries)
 
@@ -18,9 +20,9 @@ This project demonstrates a multi-agent orchestration pattern using the Google A
 
 The router agent uses an LLM (e.g., ChatGPT Turbo) to interpret the user's intent and route the request to one or more sub-agents:
 
-- **Jira Agent**: Handles Jira-related queries (e.g., ticket lookup, user info)
-- **Appointment Agent**: Handles invite scheduling
-- **Weather Agent**: Handles weather and alert queries
+- **Jira Agent**: Handles Jira-related queries (e.g., ticket lookup, user info) with local tools
+- **Appointment Agent**: Handles invite scheduling with remote tools by connecting to **remote MCP server for tools with Authentication enabled**
+- **Weather Agent**: Handles weather and alert queries with local tools
 
 Each sub-agent exposes its own tools to execute domain-specific actions. The router agent enables natural language queries like "schedule a meeting next week" or "show my Jira tickets" and automatically delegates to the correct agent(s) without the user needing to know which agent to call.
 
@@ -48,6 +50,7 @@ This pattern demonstrates:
 
 - Python 3.12+
 - Required dependencies (see `requirements.txt`)
+- Keycloak (see `https://www.keycloak.org/downloads`)
 
 ### Installation 
 
@@ -58,7 +61,7 @@ cd $HOME/ai-mcp/multi-agent/router_agent_flow
 # install with pip
 python3 -m venv ai-multi-agent
 source ai-multi-agent/bin/activate
-pip install -r ../requirements.txt
+pip install -r ../../requirements.txt
 
 ```
 
@@ -67,6 +70,59 @@ In .env file at the root of project or in this level configure your OPEN_API_KEY
 ```
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_API_BASE=https://api.openai.com/v1
+```
+
+### Set up Keycloak
+
+To enable authentication and authorization for your agents, you need to set up Keycloak as your identity provider:
+
+1. Log in to your Keycloak instance.
+2. Create a new realm for your project.
+3. Create a client (clientId) for your application (e.g., `testclient`).
+4. Add users to your realm who will authenticate with the agents.
+5. In your agent server code (`mcp_appointment_server_http.py`), configure the JWTVerifier with the following fields according to your Keycloak setup:
+  - `jwks_uri`: The JWKS endpoint for your realm (e.g., `http://127.0.0.1:8080/realms/<your-realm>/protocol/openid-connect/certs`)
+  - `issuer`: The issuer URL for your realm (e.g., `http://127.0.0.1:8080/realms/<your-realm>`)
+  - `audience`: The client ID you created above (should come in "aud" field in your jwt token)
+
+### Get Keycloak JWT token 
+
+To obtain a Keycloak JWT token for a user, follow these steps:
+
+1. Make a POST request to the Keycloak token endpoint with your realm, client ID, and user credentials. Example:
+
+```bash
+curl -X POST "http://127.0.0.1:8080/realms/<your-realm>/protocol/openid-connect/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d client_id=<your-client-id> \
+  -d grant_type=password \
+  -d username=<your-username> \
+  -d password=<your-password> \
+  -d scope=openid
+```
+
+2. The response will include an `access_token` field containing your JWT token.
+
+3. Copy the token and use it in your agent code to authenticate requests. In `appointment_agent.py`:
+
+```python
+tools=[MCPToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url="http://localhost:8000/mcp",
+        headers={"Authorization": f"Bearer <your-jwt-token>"}
+    ),
+)]
+```
+
+**Note:**
+- Replace `<your-realm>`, `<your-client-id>`, `<your-username>`, `<your-password>`, and `<your-jwt-token>` with your actual values.
+- The `aud` claim in your JWT token should match the client ID configured in your agent server for proper validation.
+
+
+### Run MCP appointment server
+
+```bash
+python3 mcp_appointment_server_http.py
 ```
 
 ### Run router agent

@@ -129,17 +129,19 @@ class AppointmentAgent:
             model=LiteLlm(model="openai/gpt-4-turbo"), # Using ChatGPT model
             name="appointment_agent",
             instruction="You are an appointment scheduling assistant. Your purpose is to create appointments based on user queries.",
-            
-            tools=[create_appointment],
-            #tools=[MCPToolset(
-            #                connection_params=StreamableHTTPConnectionParams(
-            #                    url="http://localhost:8000/mcp",
-            #                    headers={"Authorization": f"Bearer satish-token"}
-            #                ),
-            #            )],
+            #pass token in request , aud claim  in token should match what is configured in MCP server as audience. 
+            #curl -X POST "http://127.0.0.1:8080/realms/satishrealm/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d client_id=testclient -d grant_type=password -d username=satish -d password=admin -d scope=openid
+            #tools=[create_appointment],
+            tools=[MCPToolset(
+                            connection_params=StreamableHTTPConnectionParams(
+                                url="http://localhost:8000/mcp",
+                                headers={"Authorization": f"Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJhQUtDT1lBMEQzOUhWVWI4RHREVm1BNEJIZTJiQ2NXMUxzMFlqNGFVNG9VIn0.eyJleHAiOjE3NTY4NDE4MDMsImlhdCI6MTc1Njg0MTUwMywianRpIjoib25ydHJvOjJjZGY5ZDJiLTk5M2ItNTZjYy0yZjk5LTEwNDUyYjhkMzNjZCIsImlzcyI6Imh0dHA6Ly8xMjcuMC4wLjE6ODA4MC9yZWFsbXMvc2F0aXNocmVhbG0iLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZTA2ZTE2OWItMjliYi00YTAyLTkyZDMtM2JhZmM0ZjBhMjQwIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoidGVzdGNsaWVudCIsInNpZCI6IjAzYjVlZmYzLTAwODUtNDE2NC1iNjI4LWI3MjRkMDc0YzdjNSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsImRlZmF1bHQtcm9sZXMtc2F0aXNocmVhbG0iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiU2F0aXNoIEthbWF2YXJhbSIsInByZWZlcnJlZF91c2VybmFtZSI6InNhdGlzaCIsImdpdmVuX25hbWUiOiJTYXRpc2giLCJmYW1pbHlfbmFtZSI6IkthbWF2YXJhbSIsImVtYWlsIjoic2F0aXNoa2FtYXZhcmFtQGdtYWlsLmNvbSJ9.eDegyXEa9mRr1mAAH0nXH10_O9OoCN0YSTcvcHc4eckbDonT9zmBBpfgbWbN2LWiUB4YWn_Ppt-IDs1bqcvQJ0HKTku1yzMXzCc6lf_V01Cao5rsdJvlbOrXztCmD7JmH_qqdDkghyJpBzCRFjjieVRb0KoroSLwyh8KWfHx7CuxHp-syC1DP6jqF1u71PTrnOU66FbaPGe56bTzWVYz55a7xQ-1KC2ZGaNbf6TogYF0YePVrBL3Kz39ot4q8u4fL-6V1AjYqrQTmXtdS8iO2YQ9hCgOB9BwZUpgVzt9bq_HT3JLO8i8-rSF7qrolLz0eLF3Dmaxv7BMShFXvODVkw"}
+                            ),
+                        )],
             output_key="appointment_key",
             before_model_callback=simple_before_model_modifier,
         )
+        
         print(f"Building appointment agent: {agent.name}")
         return agent
     
