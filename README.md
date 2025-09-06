@@ -52,7 +52,6 @@ This repository showcases a series of demonstrations on how to build advanced, s
 ## �📚 Table of Contents
 
 - [Introduction](#introduction)
-- [⚠️ Limitations](#️-limitations)
 - [🔄 Complete Processing Flow](#-complete-processing-flow)
 - [🚀 Quick Start](#-quick-start)
   - [Prerequisites](#prerequisites)
@@ -73,16 +72,6 @@ The system demonstrates **intelligent tool chaining** where the LLM dynamically 
 3. **Chains subsequent calls** - uses the retrieved email to call tools like `get_tickets_assigned_to_user`
 
 This **autonomous tool orchestration** eliminates the need for users to understand internal data relationships or tool dependencies, enabling natural language queries like *"show jira tickets for user 1234"* to be automatically expanded into the correct sequence of tool calls.
-
-## ⚠️ Limitations
-
-This is a **Proof of Concept (POC)** implementation with with below slimitations:
-
-1. **Single Server Connection** - Can only connect to one MCP server at a time. 
-![Important](https://img.shields.io/badge/IMPORTANT-red?style=for-the-badge) **In this repo, under the mcp-http folder there is a support for connecting to multiple MCP servers via mcp.json and support for http**
-2. **Limited Privacy Protection** - Only redacts email addresses (not other sensitive data).
-![Important](https://img.shields.io/badge/IMPORTANT-red?style=for-the-badge) **Presidio library can be used with Spacy model to redact the PII (emails, phones, etc.) and write custom readaction module to redact custom values to protect intellectual propery.**
-
 
 ## 🔄 Complete Processing Flow
 
