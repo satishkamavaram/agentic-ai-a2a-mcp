@@ -1,6 +1,55 @@
 > **⚠️ POC DISCLAIMER: This is a Proof of Concept (POC) implementation. Please do not evaluate this code for production-level code structure, modularity, or best practices. This project is designed for educational and demonstration purposes only.**
 
-## 📚 Table of Contents
+## Project Components & Demos
+
+This repository showcases a series of demonstrations on how to build advanced, secure, and interconnected AI agent systems using the Model Context Protocol (MCP) and Agent to Agent Protocol(A2A). Each folder highlights a unique architectural pattern.
+
+---
+
+###  1. Basic MCP: Client & Server (stdio)
+*   **What it is:** This is the foundational example. It shows how an AI agent (the "client") can directly communicate with a set of tools (the "server") on the same machine, as if they were connected by a simple wire.
+*   **How it works:** The client and server processes communicate using **Standard I/O (stdio)**. This is a direct, low-latency communication channel perfect for local development and simple agent-tool integration.
+
+---
+
+### 2. Advanced HTTP Client (`mcp-http/`)
+*   **What it is:** This module features a more powerful client, similar to an IDE agent like VS Code Copilot. It can connect to and use tools from **multiple different MCP servers** at the same time, all managed through a single configuration file mcp.json.
+*   **How it works:** The client communicates with servers over **HTTP**. It uses a central `mcp.json` configuration file to discover and manage connections to multiple upstream MCP servers, enabling sophisticated, multi-server tool chaining.
+
+---
+
+### 3. Secure OAuth Server (`mcp-server-auth/`)
+*   **What it is:** This is an enterprise-grade tool server that requires users to log in before they can use its tools. It's designed to integrate securely with applications like VS Code, ensuring only authorized users have access.
+*   **How it works:** This MCP server is protected by an **OAuth 2.0 (Keycloak)** authentication layer. It forces clients like the VS Code Copilot to complete a full OAuth login flow before granting access, providing robust, industry-standard security.
+
+---
+
+###  4. Google ADK Agent (`adk-jira-agent/`)
+*   **What it is:** This demonstrates how an agent built with **Google's Agent Development Kit (ADK)** can connect to and use tools from an MCP server, allowing it to perform tasks like interacting with Jira.
+*   **How it works:** The agent, built using the Google ADK library, acts as a standard MCP client. It communicates over **HTTP** to an MCP server to leverage its tools, showing how different agent frameworks can interoperate with the MCP ecosystem.
+
+---
+
+###  5. Agent-to-Agent (A2A) Communication (`a2a-jira-agent/`)
+*   **What it is:** This is the most advanced example, showcasing a complete, autonomous agent ecosystem. Here, one agent (a "client agent") can discover, connect to, and delegate tasks to another specialized agent (a "server agent").
+*   **How it works:** This module implements a  **Agent-to-Agent (A2A) protocol**.
+    1.  The "server agent" exposes an **Agent Card**, which is like a business card that describes its capabilities.
+    2.  The "client agent" discovers this card and initiates a secure, token-based connection.
+    3.  The client agent can then delegate complex tasks (like a Jira request) to the server agent, which in turn uses its own MCP connection to perform the work. This demonstrates a powerful, decentralized agent collaboration pattern.
+
+---
+
+###  6. Multi-Agent Flows with Google ADK (`multi-agent/`)
+*   **What it is:** This folder contains advanced multi-agent patterns built with **Google's Agent Development Kit (ADK)**. It demonstrates how to orchestrate multiple, specialized sub-agents to accomplish complex tasks that a single agent cannot handle alone. Two primary patterns are showcased:
+    *   **Router-based Agents:** A central "Router Agent" analyzes the user's request and dynamically delegates it to the most appropriate sub-agent (e.g., a Jira Agent, an Appointment Agent, or a Weather Agent).
+    *   **Sequential Pipeline Agents:** A "Sequential Agent" executes a predefined chain of sub-agents in order, passing the output of one agent as the input to the next. This is perfect for multi-step workflows, like looking up a user's email before fetching their assigned tickets.
+*   **How it works:**
+    *   The **Router Agent** uses an LLM to understand the user's intent and select one or more sub-agents from a pool of available specialists. This allows for a flexible, natural language interface that can handle a wide variety of tasks.
+    *   The **Sequential Agent** follows a fixed pipeline, ensuring that a series of operations is performed in the correct order to resolve a dependency. For example, it first runs an `Email Lookup Agent` and then passes the result to a `Jira Agent`.
+
+---
+
+## �📚 Table of Contents
 
 - [Introduction](#introduction)
 - [⚠️ Limitations](#️-limitations)
