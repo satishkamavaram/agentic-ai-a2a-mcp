@@ -6,13 +6,13 @@ This repository showcases a series of demonstrations on how to build advanced, s
 
 ---
 
-###  1. MCP Client & Server (stdio transport)
+###  1. MCP Client & Server with stdio transport (`.`)
 *   **What it is:** This is the foundational example. It shows how an AI agent (the "client") can directly communicate with a set of tools (the "server") on the same machine, as if they were connected by a simple wire.
 *   **How it works:** The client and server processes communicate using **Standard I/O (stdio)**. This is a direct, low-latency communication channel perfect for local development and simple agent-tool integration.
 
 ---
 
-### 2. MCP Client & Server with HTTP Transport (`mcp-http/`)
+### 2. MCP Client & Server with HTTP transport (`mcp-http/`)
 *   **What it is:** This module features a more powerful client, similar to an IDE agent like VS Code Copilot. It can connect to and use tools from **multiple different MCP servers** at the same time, all managed through a single configuration file mcp.json.
 *   **How it works:** The client communicates with servers over **HTTP**. It uses a central `mcp.json` configuration file to discover and manage connections to multiple upstream MCP servers, enabling sophisticated, multi-server tool chaining.
 
