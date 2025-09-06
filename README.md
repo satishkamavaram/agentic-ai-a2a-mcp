@@ -6,25 +6,25 @@ This repository showcases a series of demonstrations on how to build advanced, s
 
 ---
 
-###  1. Basic MCP: Client & Server (stdio)
+###  1. MCP Client & Server (stdio transport)
 *   **What it is:** This is the foundational example. It shows how an AI agent (the "client") can directly communicate with a set of tools (the "server") on the same machine, as if they were connected by a simple wire.
 *   **How it works:** The client and server processes communicate using **Standard I/O (stdio)**. This is a direct, low-latency communication channel perfect for local development and simple agent-tool integration.
 
 ---
 
-### 2. Advanced HTTP Client (`mcp-http/`)
+### 2. MCP Client & Server with HTTP Transport (`mcp-http/`)
 *   **What it is:** This module features a more powerful client, similar to an IDE agent like VS Code Copilot. It can connect to and use tools from **multiple different MCP servers** at the same time, all managed through a single configuration file mcp.json.
 *   **How it works:** The client communicates with servers over **HTTP**. It uses a central `mcp.json` configuration file to discover and manage connections to multiple upstream MCP servers, enabling sophisticated, multi-server tool chaining.
 
 ---
 
-### 3. Secure OAuth Server (`mcp-server-auth/`)
+### 3. MCP Server with OAuth Authentication (`mcp-server-auth/`)
 *   **What it is:** This is an enterprise-grade tool server that requires users to log in before they can use its tools. It's designed to integrate securely with applications like VS Code, ensuring only authorized users have access.
 *   **How it works:** This MCP server is protected by an **OAuth 2.0 (Keycloak)** authentication layer. It forces clients like the VS Code Copilot to complete a full OAuth login flow before granting access, providing robust, industry-standard security.
 
 ---
 
-###  4. Google ADK Agent (`adk-jira-agent/`)
+###  4. Agent to MCP Server Communication (`adk-jira-agent/`)
 *   **What it is:** This demonstrates how an agent built with **Google's Agent Development Kit (ADK)** can connect to and use tools from an MCP server, allowing it to perform tasks like interacting with Jira.
 *   **How it works:** The agent, built using the Google ADK library, acts as a standard MCP client. It communicates over **HTTP** to an MCP server to leverage its tools, showing how different agent frameworks can interoperate with the MCP ecosystem.
 
