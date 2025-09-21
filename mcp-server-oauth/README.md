@@ -29,6 +29,8 @@ A FastMCP-based weather alert server that demonstrates OAuth2 authentication int
 ## Features
 
 - **OAuth2 Authentication**: Integrates with Keycloak using FastMCP's OAuthProxy
+- **Personalized Prompts**: Each tool can ask you questions in its own style, thanks to support for `@mcp.prompt`.
+- **Interactive Conversations**: The server can ask follow-up questions and guide you step-by-step using elicitation, making your experience more engaging and tailored.
 - **Weather Alerts**: Provides weather alert information for German states (mock response)
 - **Interactive Prompts**: Uses MCP's elicit functionality for user input
 - **JWT Token Validation**: Validates tokens from Keycloak
@@ -47,7 +49,7 @@ A FastMCP-based weather alert server that demonstrates OAuth2 authentication int
 
 ```bash
 # Clone or navigate to the project directory
-cd $HOME/ai-mcp/multi-agent/router_agent_flow
+cd $HOME/ai-mcp/mcp-server-oauth/
 
 # install with pip
 python3 -m venv ai-mcp-server-oauth
@@ -79,7 +81,7 @@ pip install -r ../requirements.txt
 ### Running the MCP Server
 
 ```bash
-python mcp_weather_server_http.py
+python mcp_server_oauth.py
 ```
 
 The server will start on `http://127.0.0.1:8000` with the MCP endpoints available at `http://127.0.0.1:8000/mcp`.
