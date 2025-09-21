@@ -207,44 +207,6 @@ def get_tickets_assigned_to_user(user_email: str) -> list:
     
     return real_tickets
 
-
-
-
-class AppointmentRequest(BaseModel):
-    """
-    Simple model for creating an appointment with clear field descriptions.
-    """
-    to_emails: str = Field(
-        ...,
-        description="comma seperated email addresses for all meeting attendees or invitees. Example: ['user1@example.com', 'user2@example.com']"
-    )
-    
-    from_email: str = Field(
-        ...,
-        description="Email address of the meeting organizer or sender or from. Example: 'organizer@example.com'"
-    )
-    
-    subject: str = Field(
-        ...,
-        description="Title or subject of the appointment. Example: 'Team Meeting'"
-    )
-    
-    date: str = Field(
-        ...,
-        description="Date of the appointment in YYYY-MM-DD format. Always include 4-digit year. Example: '2025-09-01'"
-    )
-    
-    time: str = Field(
-        ...,
-        description="Time of the appointment in HH:MM 24-hour format. Example: '14:30' for 2:30 PM"
-    )
-
-
-@mcp.prompt()
-async def get_prompt_schedule_appointment(appointment: AppointmentRequest) -> str:
-    return f"schedule appointment with {appointment.to_emails} users from my emailId {appointment.from_email} {appointment.date} {appointment.time} about {appointment.subject}"
-
-
 @mcp.prompt()
 async def get_prompt_create_appointment(to_emails: str = Field(
         ...,
