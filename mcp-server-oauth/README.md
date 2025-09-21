@@ -31,7 +31,7 @@ A FastMCP-based weather alert server that demonstrates OAuth2 authentication int
 - **OAuth2 Authentication**: Integrates with Keycloak using FastMCP's OAuthProxy
 - **Personalized Prompts**: Each tool can ask you questions in its own style, thanks to support for `@mcp.prompt`.
 - **Interactive Conversations**: The server can ask follow-up questions and guide you step-by-step using elicitation, making your experience more engaging and tailored.
-- **Weather Alerts**: Provides weather alert information for German states (mock response)
+- **Tools**: Provides weather, jira and appointment tools (mock response)
 - **Interactive Prompts**: Uses MCP's elicit functionality for user input
 - **JWT Token Validation**: Validates tokens from Keycloak
 - **VS Code Integration**: Compatible with VS Code MCP client (version used during dev: 1.103.2)
