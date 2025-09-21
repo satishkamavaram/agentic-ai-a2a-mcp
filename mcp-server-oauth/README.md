@@ -8,7 +8,7 @@ This implementation demonstrates a complete end-to-end OAuth authentication pipe
 
 ## Table of Contents
 
-- [Weather MCP Server with OAuth Authentication](#weather-mcp-server-with-oauth-authentication)
+- [Weather MCP Server with OAuth Authentication](#mcp-server-with-oauth-authentication)
   - [Features](#features)
   - [🚀 Quick Start](#-quick-start)
     - [Prerequisites](#prerequisites)
@@ -22,7 +22,7 @@ This implementation demonstrates a complete end-to-end OAuth authentication pipe
     - [VS Code Integration](#vs-code-integration)
     - [Start typing queries in vscode IDE co-pilot](#start-typing-queries-in-vscode-ide-co-pilot-to-get-response-from-configured-mcp-server)
 
-# Weather MCP Server with OAuth Authentication
+# MCP Server with OAuth Authentication
 
 A FastMCP-based weather alert server that demonstrates OAuth2 authentication integration with Keycloak for Model Context Protocol (MCP) applications.
 
