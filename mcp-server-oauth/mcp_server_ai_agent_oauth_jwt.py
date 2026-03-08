@@ -103,7 +103,7 @@ class CompanyAuthProvider(RemoteAuthProvider):
                 authorization_server_metadata,
             )
         )
-        routes.append(Route("/test", test_endpoint))
+       
 
         return routes
 
