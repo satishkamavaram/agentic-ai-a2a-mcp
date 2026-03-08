@@ -18,6 +18,8 @@ from fastmcp import FastMCP, Context
 from fastmcp.server.dependencies import get_http_headers
 from dataclasses import dataclass
 from starlette.responses import JSONResponse
+from starlette.routing import Route
+from pydantic import AnyHttpUrl
 from fastmcp.server.auth import OAuthProxy
 from fastmcp.server.auth.providers.jwt import JWTVerifier
 from pydantic import BaseModel, Field
